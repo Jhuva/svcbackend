@@ -1,0 +1,37 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.svcbackend.mapper.SectorMinistriesMapper">
+
+    <resultMap id="SectorMinistriesMap" type="com.svcbackend.model.SectorMinistriesModel">
+        <id property="idSectorMinisterio" column="idSectorMinisterio"/>
+        <id property="idZona" column="idZona"/>
+        <result property="nombre" column="nombre"/>
+        <result property="nombreColPast" column="nombr_col_past"/>
+    </resultMap>
+
+    <select id="findAllSectorMinistries" resultMap="SectorMinistriesMap">
+        SELECT * FROM mae_sector_minis_zonal ORDER BY idSector_ministerio ASC
+    </select>
+
+    <select id="findByIdSectorMinistries" parameterType="int" resultMap="SectorMinistriesMap">
+        SELECT * FROM mae_sector_minis_zonal WHERE idSector_ministerio = #{idSector_ministerio}
+    </select>
+
+    <insert id="registerSectorMinistries" useGeneratedKeys="true" keyProperty="idSectorMinisterio">
+        INSERT INTO mae_sector_minis_zonal (idZona, nombre, nombre_col_past) VALUES (#{idZona}, #{nombre}, #{nombre_col_past})
+    </insert>
+
+    <update id="updateSectorMinistries">
+        UPDATE mae_sector_minis_zonal
+        SET idZona = #{idZona},
+            nombre = #{nombre},
+            nombre_col_past = #{nombre_col_past}
+        WHERE idSector_ministerio = #{idSector_ministerio}
+    </update>
+
+    <delete id="deleteSectorMinistries"  parameterType="int">
+        DELETE FROM mae_sector_minis_zonal WHERE idSector_ministerio = #{idSector_ministerio}
+    </delete>
+
+</mapper>

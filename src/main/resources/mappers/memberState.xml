@@ -1,0 +1,33 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.svcbackend.mapper.MemberStateMapper">
+
+    <resultMap id="MemberStateMap" type="com.svcbackend.model.MemberStateModel">
+        <id property="idEstadoMiembro" column="idEstadoMiembro"/>
+        <result property="estadoMiembro" column="estado_miembro"/>
+    </resultMap>
+
+    <select id="findAllMemberState" resultMap="MemberStateMap">
+        SELECT * FROM estado_miembro ORDER BY idEstado_miembro ASC
+    </select>
+
+    <select id="findByIdMemberState" parameterType="int" resultMap="MemberStateMap">
+        SELECT * FROM estado_miembro WHERE idEstado_miembro = #{idEstado_miembro}
+    </select>
+
+    <insert id="registerMemberState" useGeneratedKeys="true" keyProperty="idEstadoMiembro">
+        INSERT INTO estado_miembro (estado_miembro) VALUES (#{estado_miembro})
+    </insert>
+
+    <update id="updateMemberState">
+        UPDATE estado_miembro
+        SET estado_miembro = #{estado_miembro}
+        WHERE idEstado_miembro = #{idEstado_miembro}
+    </update>
+
+    <delete id="deleteMemberState"  parameterType="int">
+        DELETE FROM estado_miembro WHERE idEstado_miembro = #{idEstado_miembro}
+    </delete>
+
+</mapper>

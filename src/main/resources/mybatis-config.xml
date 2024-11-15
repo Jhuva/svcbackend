@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <typeHandlers>
+        <typeHandler handler="com.svcbackend.service.impl.ArrayToListTypeHandler"/>
+    </typeHandlers>
+
+    <mappers>
+        <mapper resource="mappers/cell.xml"/>
+        <mapper resource="mappers/cellState.xml"/>
+        <mapper resource="mappers/christian.xml"/>
+        <mapper resource="mappers/civilState.xml"/>
+        <mapper resource="mappers/comment.xml"/>
+        <mapper resource="mappers/leader.xml"/>
+        <mapper resource="mappers/leaderState.xml"/>
+        <mapper resource="mappers/memberState.xml"/>
+        <mapper resource="mappers/professionalGrade.xml"/>
+        <mapper resource="mappers/rol.xml"/>
+        <mapper resource="mappers/sectorMinistries.xml"/>
+        <mapper resource="mappers/serviceArea.xml"/>
+        <mapper resource="mappers/supervision.xml"/>
+        <mapper resource="mappers/zone.xml"/>
+    </mappers>
+</configuration>

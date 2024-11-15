@@ -1,0 +1,46 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.svcbackend.mapper.LeaderMapper">
+
+    <resultMap id="LeaderMap" type="com.svcbackend.model.LeaderModel">
+        <id property="idLider" column="idLider"/>
+        <id property="idCristiano" column="idCristiano"/>
+        <result property="grado" column="grado"/>
+        <result property="liderServidor" column="lider_servidor"/>
+        <result property="areaServicio" column="area_servicio"/>
+        <result property="estado" column="estado"/>
+        <result property="liderCelular" column="lider_celular"/>
+        <result property="rol" column="rol"/>
+    </resultMap>
+
+    <select id="findAllLeader" resultMap="LeaderMap">
+        SELECT * FROM mae_lider ORDER BY idLider ASC
+    </select>
+
+    <select id="findByIdLeader" parameterType="int" resultMap="LeaderMap">
+        SELECT * FROM mae_lider WHERE idLider = #{idLider}
+    </select>
+
+    <insert id="registerLeader" useGeneratedKeys="true" keyProperty="idLider">
+        INSERT INTO mae_lider (idCristiano, grado, lider_servidor, area_servicio, estado, lider_celular, rol)
+        VALUES (#{idCristiano}, #{grado}, #{lider_servidor}, #{area_servicio}, #{estado}, #{lider_celular}, #{rol})
+    </insert>
+
+    <update id="updateLeader">
+        UPDATE mae_lider
+        SET idCristiano = #{idCristiano},
+            grado = #{grado},
+            lider_servidor = #{lider_servidor},
+            area_servicio = #{area_servicio},
+            estado = #{estado},
+            lider_celular = #{lider_celular},
+            rol = #{rol}
+        WHERE idLider = #{idLider}
+    </update>
+
+    <delete id="deleteLeader"  parameterType="int">
+        DELETE FROM mae_lider WHERE idLider = #{idLider}
+    </delete>
+
+</mapper>

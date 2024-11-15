@@ -1,0 +1,35 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.svcbackend.mapper.ZoneMapper">
+
+    <resultMap id="ZoneMap" type="com.svcbackend.model.ZoneModel">
+        <id property="idZona" column="idZona"/>
+        <result property="nombre" column="nombre"/>
+        <result property="nombrePsZonal" column="nombre_ps_zonal"/>
+    </resultMap>
+
+    <select id="findAllZone" resultMap="ZoneMap">
+        SELECT * FROM mae_zona ORDER BY idZona ASC
+    </select>
+
+    <select id="findByIdZone" parameterType="int" resultMap="ZoneMap">
+        SELECT * FROM mae_zona WHERE idZona = #{idZona}
+    </select>
+
+    <insert id="registerZone" useGeneratedKeys="true" keyProperty="idZona">
+        INSERT INTO mae_zona (nombre, nombre_ps_zonal) VALUES (#{nombre}, #{nombre_ps_zonal})
+    </insert>
+
+    <update id="updateZone">
+        UPDATE mae_zona
+        SET nombre = #{nombre},
+            nombre_ps_zonal = #{nombre_ps_zonal}
+        WHERE idZona = #{idZona}
+    </update>
+
+    <delete id="deleteZone"  parameterType="int">
+        DELETE FROM mae_zona WHERE idZona = #{idZona}
+    </delete>
+
+</mapper>

@@ -1,0 +1,33 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.svcbackend.mapper.CellStateMapper">
+
+    <resultMap id="CellStateMap" type="com.svcbackend.model.CellStateModel">
+        <id property="idEstadoCelula" column="idEstado_celula"/>
+        <result property="estadoCelula" column="estado_celula"/>
+    </resultMap>
+
+    <select id="findAllCellState" resultMap="CellStateMap">
+        SELECT * FROM estado_celula ORDER BY idEstado_celula ASC
+    </select>
+
+    <select id="findByIdCellState" parameterType="int" resultMap="CellStateMap">
+        SELECT * FROM estado_celula WHERE idEstado_celula = #{idEstado_celula}
+    </select>
+
+    <insert id="registerCellState" useGeneratedKeys="true" keyProperty="idEstadoCelula">
+        INSERT INTO estado_celula (estado_celula) VALUES (#{estado_celula})
+    </insert>
+
+    <update id="updateCellState">
+        UPDATE estado_celula
+        SET estado_celula = #{estado_celula}
+        WHERE idEstado_celula = #{idEstado_celula}
+    </update>
+
+    <delete id="deleteCellState"  parameterType="int">
+        DELETE FROM estado_celula WHERE idEstado_celula = #{idEstado_celula}
+    </delete>
+
+</mapper>

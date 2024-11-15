@@ -1,0 +1,42 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.svcbackend.mapper.CellMapper">
+
+    <resultMap id="CellMap" type="com.svcbackend.model.CellModel">
+        <id property="idCelula" column="id_celula"/>
+        <id property="idSupervision" column="id_supervision"/>
+        <result property="numeroCelula" column="numero_celula"/>
+        <result property="nombreLider" column="nombre_lider"/>
+        <result property="direccion" column="direccion"/>
+        <result property="estado" column="estado"/>
+    </resultMap>
+
+    <select id="findAllCell" resultMap="CellMap">
+        SELECT * FROM mae_celula ORDER BY idCelula ASC
+    </select>
+
+    <select id="findByIdCell" parameterType="int" resultMap="CellMap">
+        SELECT * FROM mae_celula WHERE idCelula = #{idCelula}
+    </select>
+
+    <insert id="registerCell" useGeneratedKeys="true" keyProperty="idCelula">
+        INSERT INTO mae_celula (idSupervision, numero_celula, nombre_lider, direccion, estado)
+        VALUES (#{idSupervision}, #{numero_celula}, #{nombre_lider}, #{direccion}, #{estado})
+    </insert>
+
+    <update id="updateCell">
+        UPDATE mae_celula
+        SET idSupervision = #{idSupervision},
+            numero_celula = #{numero_celula},
+            nombre_lider = #{nombre_lider},
+            direccion = #{direccion},
+            estado = #{estado}
+        WHERE idCelula = #{idCelula}
+    </update>
+
+    <delete id="deleteCell"  parameterType="int">
+        DELETE FROM mae_celula WHERE idCelula = #{idCelula}
+    </delete>
+
+</mapper>

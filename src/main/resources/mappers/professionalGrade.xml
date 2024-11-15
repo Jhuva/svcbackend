@@ -1,0 +1,33 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.svcbackend.mapper.ProfessionalGradeMapper">
+
+    <resultMap id="ProfessionalGradeMap" type="com.svcbackend.model.ProfessionalGradeModel">
+        <id property="idGradoProfesional" column="idGradoProfesional"/>
+        <result property="gradoProfesional" column="grado_profesional"/>
+    </resultMap>
+
+    <select id="findAllProfessionalGrade" resultMap="ProfessionalGradeMap">
+        SELECT * FROM grado_profesional ORDER BY idGrado_profesional ASC
+    </select>
+
+    <select id="findByIdProfessionalGrade" parameterType="int" resultMap="ProfessionalGradeMap">
+        SELECT * FROM grado_profesional WHERE idGrado_profesional = #{idGrado_profesional}
+    </select>
+
+    <insert id="registerProfessionalGrade" useGeneratedKeys="true" keyProperty="idGradoProfesional">
+        INSERT INTO grado_profesional (grado_profesional) VALUES (#{grado_profesional})
+    </insert>
+
+    <update id="updateProfessionalGrade">
+        UPDATE grado_profesional
+        SET grado_profesional = #{grado_profesional}
+        WHERE idGrado_profesional = #{idGrado_profesional}
+    </update>
+
+    <delete id="deleteProfessionalGrade"  parameterType="int">
+        DELETE FROM grado_profesional WHERE idGrado_profesional = #{idGrado_profesional}
+    </delete>
+
+</mapper>
