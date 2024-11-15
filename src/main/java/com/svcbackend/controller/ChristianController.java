@@ -21,6 +21,11 @@ public class ChristianController {
         return christianService.findAllChristian();
     }
 
+    @GetMapping("/numbers")
+    public GenericResponse<Object> findChristianNumbers() throws GenericException {
+        return christianService.findChristianNumbers();
+    }
+
     @GetMapping("/{idChristian}")
     public GenericResponse<Object> findByIdChristian(@PathVariable("idChristian") Integer idChristian) throws GenericException {
         return christianService.findByIdChristian(idChristian);

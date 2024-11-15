@@ -6,6 +6,7 @@ import com.svcbackend.response.GenericResponse;
 
 public interface ChristianService {
     GenericResponse<Object> findAllChristian() throws GenericException;
+    GenericResponse<Object> findChristianNumbers() throws GenericException;
     GenericResponse<Object> findByIdChristian(Integer idCristiano) throws GenericException;
     GenericResponse<Object> findByIdChristianDetail(Integer idCristiano) throws GenericException;
     GenericResponse<Object> registerChristian(ChristianModel christian);

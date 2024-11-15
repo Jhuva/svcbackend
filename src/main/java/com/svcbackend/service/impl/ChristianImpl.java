@@ -6,6 +6,7 @@ import com.svcbackend.exception.GenericException;
 import com.svcbackend.mapper.ChristianMapper;
 import com.svcbackend.model.ChristianDetailModel;
 import com.svcbackend.model.ChristianModel;
+import com.svcbackend.model.ChristianNumModel;
 import com.svcbackend.response.GenericResponse;
 import com.svcbackend.service.ChristianService;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,24 @@ public class ChristianImpl implements ChristianService {
             } else {
                 log.info("No se cuenta con Cristianos");
                 return new GenericResponse<>(false, "No hay lista de Cristianos");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new GenericException("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public GenericResponse<Object> findChristianNumbers() throws GenericException {
+        log.info("Obteniendo los numeros de cristianos");
+        try {
+            ChristianNumModel christianRes = christianMapper.findChristianNumbers();
+            if(christianRes != null) {
+                log.info("Numeros de Cristianos obtenidos");
+                return new GenericResponse<>(true, christianRes, "Números cristianos obtenidos");
+            } else {
+                log.info("No se cuenta con Números de Cristianos");
+                return new GenericResponse<>(false, "No hay números de Cristianos");
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -4,8 +4,8 @@
 <mapper namespace="com.svcbackend.mapper.CellMapper">
 
     <resultMap id="CellMap" type="com.svcbackend.model.CellModel">
-        <id property="idCelula" column="id_celula"/>
-        <id property="idSupervision" column="id_supervision"/>
+        <id property="idCelula" column="idCelula"/>
+        <id property="idSupervision" column="idSupervision"/>
         <result property="numeroCelula" column="numero_celula"/>
         <result property="nombreLider" column="nombre_lider"/>
         <result property="direccion" column="direccion"/>

@@ -3,6 +3,11 @@
 
 <mapper namespace="com.svcbackend.mapper.ChristianMapper">
 
+    <resultMap id="ChristianNumberMap" type="com.svcbackend.model.ChristianNumModel">
+        <result property="totalMiembros" column="total_miembros"/>
+        <result property="totalAsistentes" column="total_asistentes"/>
+    </resultMap>
+
     <resultMap id="ChristianMap" type="com.svcbackend.model.ChristianModel">
         <id property="idCristiano" column="idCristiano"/>
         <id property="idCelula" column="idCelula"/>
@@ -50,6 +55,13 @@
         <result property="comentarios" column="comentarios" typeHandler="com.svcbackend.service.impl.ArrayToListTypeHandler"/>
     </resultMap>
 
+    <select id="findChristianNumbers" resultMap="ChristianNumberMap">
+        SELECT
+            COUNT(CASE WHEN rol = 'Miembro' THEN 0 END) AS total_miembros,
+            COUNT(CASE WHEN rol = 'Asistente' THEN 0 END) AS total_asistentes
+        FROM mae_cristiano
+    </select>
+
     <select id="findAllChristian" resultMap="ChristianMap">
         SELECT * FROM mae_cristiano ORDER BY idCristiano ASC
     </select>
@@ -75,7 +87,7 @@
                  LEFT JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
                  LEFT JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
                  LEFT JOIN mae_zona mz ON msmz.idzona = mz.idzona
-        WHERE c.idcristiano = #{idCristiano};
+        WHERE c.idcristiano = #{idCristiano}
     </select>
 
     <insert id="registerChristian" useGeneratedKeys="true" keyProperty="idCristiano">
