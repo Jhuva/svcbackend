@@ -6,7 +6,10 @@ import com.svcbackend.response.GenericResponse;
 
 public interface LeaderService {
     GenericResponse<Object> findAllLeader() throws GenericException;
+    GenericResponse<Object> findAllTableLeader() throws GenericException;
+    GenericResponse<Object> findLeaderNumbers() throws GenericException;
     GenericResponse<Object> findByIdLeader(Integer idLider) throws GenericException;
+    GenericResponse<Object> findByIdLeaderDetail(Integer idLider) throws GenericException;
     GenericResponse<Object> registerLeader(LeaderModel leader);
     GenericResponse<Object> updateLeader(LeaderModel leader);
     GenericResponse<Object> deleteLeader(Integer idLider);

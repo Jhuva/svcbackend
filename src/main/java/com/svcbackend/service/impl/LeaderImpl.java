@@ -1,9 +1,10 @@
 package com.svcbackend.service.impl;
 
+import com.svcbackend.dto.LeaderAllDTO;
 import com.svcbackend.dto.LeaderDTO;
 import com.svcbackend.exception.GenericException;
 import com.svcbackend.mapper.LeaderMapper;
-import com.svcbackend.model.LeaderModel;
+import com.svcbackend.model.*;
 import com.svcbackend.response.GenericResponse;
 import com.svcbackend.service.LeaderService;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,47 @@ public class LeaderImpl implements LeaderService {
     }
 
     @Override
+    public GenericResponse<Object> findAllTableLeader() throws GenericException {
+        log.info("Obteniendo la lista de lideres...");
+        try {
+            List<LeaderAllModel> listAllLeader = leaderMapper.findAllTableLeader();
+            List<LeaderAllDTO> listAllLeaderDTO = new ArrayList<>();
+            if(listAllLeader != null && !listAllLeader.isEmpty()) {
+                listAllLeader.forEach(leader -> {
+                    LeaderAllDTO leaderAllDTO = fixSpacesCampsTableLeader(leader);
+                    listAllLeaderDTO.add(leaderAllDTO);
+                });
+                log.info("Lista de Lideres obtenidos");
+                return new GenericResponse<>(true, listAllLeaderDTO, "Lista de Líderes obtenidos");
+            } else {
+                log.info("No se cuenta con Lideres");
+                return new GenericResponse<>(false, "No hay lista de Líderes");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new GenericException("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public GenericResponse<Object> findLeaderNumbers() throws GenericException {
+        log.info("Obteniendo los numeros de lideres");
+        try {
+            LeaderNumModel leaderRes = leaderMapper.findLeaderNumbers();
+            if(leaderRes != null) {
+                log.info("Numeros de Cristianos obtenidos");
+                return new GenericResponse<>(true, leaderRes, "Números líderes obtenidos");
+            } else {
+                log.info("No se cuenta con Numeros de lideres");
+                return new GenericResponse<>(false, "No hay números de líderes");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new GenericException("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
     public GenericResponse<Object> findByIdLeader(Integer idLeader) throws GenericException {
         log.info("Obteniendo al lider {}...", idLeader);
         try {
@@ -57,6 +99,22 @@ public class LeaderImpl implements LeaderService {
             } else {
                 log.info("No se cuenta con el lider {}", idLeader);
                 return new GenericResponse<>(false, "No se cuenta con el líder " + idLeader);
+            }
+        } catch (Exception e) {
+            throw new GenericException("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public GenericResponse<Object> findByIdLeaderDetail(Integer idLeader) throws GenericException {
+        log.info("Obteniendo el detalle del lider {}...", idLeader);
+        try {
+            LeaderDetailModel leaderRes = leaderMapper.findByIdLeaderDetail(idLeader);
+            if(leaderRes != null) {
+                log.info("Detalle de lider {}", idLeader);
+                return new GenericResponse<>( true, leaderRes, "Lider " + idLeader + " obtenido.");
+            } else {
+                return new GenericResponse<>(false, "Lider no existe " + idLeader);
             }
         } catch (Exception e) {
             throw new GenericException("Error: " + e.getMessage());
@@ -128,6 +186,33 @@ public class LeaderImpl implements LeaderService {
             e.printStackTrace();
             return new GenericResponse<>(false, "Error al momento de eliminar al Líder " + idLeader);
         }
+    }
+
+    private LeaderAllDTO fixSpacesCampsTableLeader(LeaderAllModel leaderAllModel) {
+        LeaderAllDTO leaderAllDTO = new LeaderAllDTO();
+        BeanUtils.copyProperties(leaderAllModel, leaderAllDTO);
+        if(leaderAllDTO.getNombres() != null) {
+            leaderAllDTO.setNombres(leaderAllModel.getNombres().trim());
+        }
+        if(leaderAllDTO.getApellidos() != null) {
+            leaderAllDTO.setApellidos(leaderAllModel.getApellidos().trim());
+        }
+        if(leaderAllDTO.getEstado() != null) {
+            leaderAllDTO.setEstado(leaderAllModel.getEstado().trim());
+        }
+        if(leaderAllDTO.getAreaServicio() != null) {
+            leaderAllDTO.setAreaServicio(leaderAllModel.getAreaServicio().trim());
+        }
+        if(leaderAllDTO.getGrado() != null) {
+            leaderAllDTO.setGrado(leaderAllModel.getGrado());
+        }
+        if(leaderAllDTO.getLiderCelular() != null) {
+            leaderAllDTO.setLiderCelular(leaderAllModel.getLiderCelular().trim());
+        }
+        if(leaderAllDTO.getSectorMinisterio() != null) {
+            leaderAllDTO.setSectorMinisterio(leaderAllModel.getSectorMinisterio());
+        }
+        return leaderAllDTO;
     }
 
 

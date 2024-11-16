@@ -8,6 +8,7 @@
 
     <typeHandlers>
         <typeHandler handler="com.svcbackend.service.impl.ArrayToListTypeHandler"/>
+        <typeHandler handler="com.svcbackend.service.impl.JsonTypeHandler"/>
     </typeHandlers>
 
     <mappers>

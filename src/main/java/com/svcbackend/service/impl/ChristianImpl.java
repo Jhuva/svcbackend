@@ -84,6 +84,7 @@ public class ChristianImpl implements ChristianService {
         }
     }
 
+    @Override
     public GenericResponse<Object> findByIdChristianDetail(Integer idChristian) throws GenericException {
         log.info("Obteniendo el detalle del crisitiano {}...", idChristian);
         try {

@@ -3,6 +3,11 @@
 
 <mapper namespace="com.svcbackend.mapper.CellMapper">
 
+    <resultMap id="CellNumberMap" type="com.svcbackend.model.CellNumModel">
+        <result property="celulasActivas" column="celulas_activas"/>
+        <result property="celulasNoActivas" column="celulas_no_activas"/>
+    </resultMap>
+
     <resultMap id="CellMap" type="com.svcbackend.model.CellModel">
         <id property="idCelula" column="idCelula"/>
         <id property="idSupervision" column="idSupervision"/>
@@ -12,12 +17,91 @@
         <result property="estado" column="estado"/>
     </resultMap>
 
+    <resultMap id="CellAllMap" type="com.svcbackend.model.CellAllModel">
+        <result property="numeroCelula" column="numero_celula"/>
+        <result property="sectorMinisterio" column="sector_ministerio"/>
+        <result property="miembros" column="miembros"/>
+        <result property="asistentes" column="asistentes"/>
+        <result property="total" column="total"/>
+        <result property="nombreLider" column="nombre_lider"/>
+        <result property="direccion" column="direccion"/>
+        <result property="estado" column="estado"/>
+    </resultMap>
+
+    <resultMap id="CellDetailMap" type="com.svcbackend.model.CellDetailModel">
+        <result property="nombreLider" column="nombre_lider"/>
+        <result property="direccion" column="direccion"/>
+        <result property="estado" column="estado"/>
+        <result property="numeroCelula" column="numero_celula"/>
+        <result property="nombreSupervision" column="nombre_supervision"/>
+        <result property="nombreZona" column="nombre_zona"/>
+        <result property="sectorMinisterio" column="sector_ministerio"/>
+        <result property="cantMiembros" column="cant_miembros"/>
+        <result property="cantAsistentes" column="cant_asistentes"/>
+        <result property="total" column="total"/>
+        <result property="miembros" column="miembros" typeHandler="com.svcbackend.service.impl.JsonTypeHandler"/>
+        <result property="asistentes" column="asistentes" typeHandler="com.svcbackend.service.impl.JsonTypeHandler"/>
+    </resultMap>
+
+    <select id="findCellNumbers" resultMap="CellNumberMap">
+        SELECT
+            COUNT(CASE WHEN estado = 'Activo' THEN 0 END) AS celulas_activas,
+            COUNT(CASE WHEN estado = 'No Activo' THEN 0 END) AS celulas_no_activas
+        FROM mae_celula;
+    </select>
+
     <select id="findAllCell" resultMap="CellMap">
         SELECT * FROM mae_celula ORDER BY idCelula ASC
     </select>
 
+    <select id="findAllTableCell" resultMap="CellAllMap">
+        SELECT
+            mc.numero_celula, msmz.nombre AS sector_ministerio,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+             WHERE rol = 'Miembro' AND c.idcelula = mc.idcelula ) AS miembros,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+             WHERE rol = 'Asistente' AND c.idcelula = mc.idcelula ) AS asistentes,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+             WHERE c.idcelula = mc.idcelula ) AS total,
+            mc.nombre_lider, mc.direccion, mc.estado
+        FROM mae_celula mc
+                 LEFT JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                 LEFT JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+    </select>
+
     <select id="findByIdCell" parameterType="int" resultMap="CellMap">
         SELECT * FROM mae_celula WHERE idCelula = #{idCelula}
+    </select>
+
+    <select id="findByIdCellDetail" parameterType="int" resultMap="CellDetailMap">
+        SELECT
+            mc.nombre_lider, mc.direccion, mc.estado, mc.numero_celula,
+            ms.nombre_supervision,
+            mz.nombre as nombre_zona,
+            msmz.nombre as sector_ministerio,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+             WHERE rol = 'Miembro' AND c.idcelula = mc.idcelula ) AS cant_miembros,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+             WHERE rol = 'Asistente' AND c.idcelula = mc.idcelula ) AS cant_asistentes,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+             WHERE c.idcelula = mc.idcelula ) AS total,
+            (SELECT JSON_AGG(JSON_BUILD_OBJECT('idCristiano', c.idcristiano, 'nombres', c.nombres, 'apellidos', c.apellidos))
+             FROM mae_cristiano c
+             where rol = 'Miembro' and c.idcelula = mc.idcelula) AS miembros,
+            (SELECT JSON_AGG(JSON_BUILD_OBJECT('idCristiano', c.idcristiano, 'nombres', c.nombres, 'apellidos', c.apellidos))
+             FROM mae_cristiano c
+             where rol = 'Asistente' and c.idcelula = mc.idcelula) as asistentes
+        FROM mae_celula mc
+                 LEFT JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                 LEFT JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+                 LEFT JOIN mae_zona mz ON msmz.idzona = mz.idzona
+        WHERE mc.idcelula = 14
     </select>
 
     <insert id="registerCell" useGeneratedKeys="true" keyProperty="idCelula">

@@ -21,9 +21,24 @@ public class CellController {
         return cellService.findAllCell();
     }
 
+    @GetMapping("/table")
+    public GenericResponse<Object> findAllTableCell() throws GenericException {
+        return cellService.findAllTableCell();
+    }
+
+    @GetMapping("/numbers")
+    public GenericResponse<Object> findCellNumbers() throws GenericException {
+        return cellService.findCellNumbers();
+    }
+
     @GetMapping("/{idCell}")
     public GenericResponse<Object> findByIdCell(@PathVariable("idCell") Integer idCell) throws GenericException {
         return cellService.findByIdCell(idCell);
+    }
+
+    @GetMapping("/detail/{idCell}")
+    public GenericResponse<Object> findByIdCellDetail(@PathVariable("idCell") Integer idCell) throws GenericException {
+        return cellService.findByIdCellDetail(idCell);
     }
 
     @PostMapping("/register")

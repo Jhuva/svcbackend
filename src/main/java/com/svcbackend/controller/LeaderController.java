@@ -21,9 +21,24 @@ public class LeaderController {
         return leaderService.findAllLeader();
     }
 
+    @GetMapping("/table")
+    public GenericResponse<Object> findAllTableLeader() throws GenericException {
+        return leaderService.findAllTableLeader();
+    }
+
+    @GetMapping("/numbers")
+    public GenericResponse<Object> findLeaderNumbers() throws GenericException {
+        return leaderService.findLeaderNumbers();
+    }
+
     @GetMapping("/{idLeader}")
     public GenericResponse<Object> findByIdLeader(@PathVariable("idLeader") Integer idLeader) throws GenericException {
         return leaderService.findByIdLeader(idLeader);
+    }
+
+    @GetMapping("/detail/{idLeader}")
+    public GenericResponse<Object> findByIdLeaderDetail(@PathVariable("idLeader") Integer idLeader) throws GenericException {
+        return leaderService.findByIdLeaderDetail(idLeader);
     }
 
     @PostMapping("/register")

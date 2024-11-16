@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ChristianNumModel {
-    private String totalMiembros;
-    private String totalAsistentes;
+    private Integer totalMiembros;
+    private Integer totalAsistentes;
 }
