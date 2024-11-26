@@ -109,17 +109,17 @@
 
     <insert id="registerLeader" useGeneratedKeys="true" keyProperty="idLider">
         INSERT INTO mae_lider (idCristiano, grado, lider_servidor, area_servicio, estado, lider_celular, rol)
-        VALUES (#{idCristiano}, #{grado}, #{lider_servidor}, #{area_servicio}, #{estado}, #{lider_celular}, #{rol})
+        VALUES (#{idCristiano}, #{grado}, #{liderServidor}, #{areaServicio}, #{estado}, #{liderCelular}, #{rol})
     </insert>
 
     <update id="updateLeader">
         UPDATE mae_lider
         SET idCristiano = #{idCristiano},
             grado = #{grado},
-            lider_servidor = #{lider_servidor},
-            area_servicio = #{area_servicio},
+            lider_servidor = #{liderServidor},
+            area_servicio = #{areaServicio},
             estado = #{estado},
-            lider_celular = #{lider_celular},
+            lider_celular = #{liderCelular},
             rol = #{rol}
         WHERE idLider = #{idLider}
     </update>

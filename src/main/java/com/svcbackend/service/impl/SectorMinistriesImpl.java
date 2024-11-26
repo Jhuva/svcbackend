@@ -1,9 +1,10 @@
 package com.svcbackend.service.impl;
 
+import com.svcbackend.dto.SectorMinistriesAllDTO;
 import com.svcbackend.dto.SectorMinistriesDTO;
 import com.svcbackend.exception.GenericException;
 import com.svcbackend.mapper.SectorMinistriesMapper;
-import com.svcbackend.model.SectorMinistriesModel;
+import com.svcbackend.model.*;
 import com.svcbackend.response.GenericResponse;
 import com.svcbackend.service.SectorMinistriesService;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,47 @@ public class SectorMinistriesImpl implements SectorMinistriesService {
     }
 
     @Override
+    public GenericResponse<Object> findAllTableSectorMinistries() throws GenericException {
+        log.info("Obteniendo la lista de sectores y ministerios...");
+        try {
+            List<SectorMinistriesAllModel> listAllSectorMinistries = sectorMinistriesMapper.findAllTableSectorMinistries();
+            List<SectorMinistriesAllDTO> listAllSectorMinistriesDTO = new ArrayList<>();
+            if(listAllSectorMinistries != null && !listAllSectorMinistries.isEmpty()) {
+                listAllSectorMinistries.forEach(sectorMinistries -> {
+                    SectorMinistriesAllDTO sectorMinistriesAllDTO = fixSpacesCampsTableSectorMinistries(sectorMinistries);
+                    listAllSectorMinistriesDTO.add(sectorMinistriesAllDTO);
+                });
+                log.info("Lista de Sectores y Ministerios obtenidos");
+                return new GenericResponse<>(true, listAllSectorMinistriesDTO, "Lista de Sectores y Ministerios obtenidos");
+            } else {
+                log.info("No se cuenta con Sectores y Ministerios");
+                return new GenericResponse<>(false, "No hay lista de Sectores y Ministerios");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new GenericException("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public GenericResponse<Object> findSectorMinistriesNumbers() throws GenericException {
+        log.info("Obteniendo los numeros de sectores o ministerios");
+        try {
+            SectorMinistriesNumModel sectorMinistriesRes = sectorMinistriesMapper.findSectorMinistriesNumbers();
+            if(sectorMinistriesRes != null) {
+                log.info("Numeros de Sectores y Ministerios obtenidos");
+                return new GenericResponse<>(true, sectorMinistriesRes, "Números sectores o ministerios obtenidos");
+            } else {
+                log.info("No se cuenta con Números de Sectores o ministerios");
+                return new GenericResponse<>(false, "No hay números de Sectores y Ministerios");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new GenericException("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
     public GenericResponse<Object> findByIdMinistriesService(Integer idSector_ministerio) throws GenericException {
         log.info("Obteniendo Sectores o Ministerios {}...", idSector_ministerio);
         try {
@@ -57,6 +99,22 @@ public class SectorMinistriesImpl implements SectorMinistriesService {
             } else {
                 log.info("No se cuenta con el siguiente Sectores o Ministerios {}", idSector_ministerio);
                 return new GenericResponse<>(false, "No se cuenta con el Sectores o Ministerios " + idSector_ministerio);
+            }
+        } catch (Exception e) {
+            throw new GenericException("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public GenericResponse<Object> findByIdSectorMinistriesDetail(Integer idSector_ministerio) throws GenericException {
+        log.info("Obteniendo el detalle de Sector o Ministerio {}...", idSector_ministerio);
+        try {
+            SectorMinistriesDetailModel sectorMinistriesRes = sectorMinistriesMapper.findByIdSectorMinistriesDetail(idSector_ministerio);
+            if(sectorMinistriesRes != null) {
+                log.info("Detalle del Sector o Ministerio {}", idSector_ministerio);
+                return new GenericResponse<>( true, sectorMinistriesRes, "Sector o Ministerio " + idSector_ministerio + " obtenido.");
+            } else {
+                return new GenericResponse<>(false, "Sector o Ministerio no existe " + idSector_ministerio);
             }
         } catch (Exception e) {
             throw new GenericException("Error: " + e.getMessage());
@@ -128,6 +186,36 @@ public class SectorMinistriesImpl implements SectorMinistriesService {
             e.printStackTrace();
             return new GenericResponse<>(false, "Error al momento de eliminar el Sectores o Ministerios " + idSector_ministerio);
         }
+    }
+
+    private SectorMinistriesAllDTO fixSpacesCampsTableSectorMinistries(SectorMinistriesAllModel sectorMinistriesAllModel) {
+        SectorMinistriesAllDTO sectorMinistriesAllDTO = new SectorMinistriesAllDTO();
+        BeanUtils.copyProperties(sectorMinistriesAllModel, sectorMinistriesAllDTO);
+        if(sectorMinistriesAllDTO.getNombre() != null) {
+            sectorMinistriesAllDTO.setNombre(sectorMinistriesAllModel.getNombre().trim());
+        }
+        if(sectorMinistriesAllDTO.getNombreColPast() != null) {
+            sectorMinistriesAllDTO.setNombreColPast(sectorMinistriesAllModel.getNombreColPast().trim());
+        }
+        if(sectorMinistriesAllDTO.getNombreZona() != null) {
+            sectorMinistriesAllDTO.setNombreZona(sectorMinistriesAllModel.getNombreZona().trim());
+        }
+        if(sectorMinistriesAllDTO.getCantSupervisiones() != null) {
+            sectorMinistriesAllDTO.setCantSupervisiones(sectorMinistriesAllModel.getCantSupervisiones());
+        }
+        if(sectorMinistriesAllDTO.getCantCelulas() != null) {
+            sectorMinistriesAllDTO.setCantCelulas(sectorMinistriesAllModel.getCantCelulas());
+        }
+        if(sectorMinistriesAllDTO.getMiembros() != null) {
+            sectorMinistriesAllDTO.setMiembros(sectorMinistriesAllModel.getMiembros());
+        }
+        if(sectorMinistriesAllDTO.getAsistentes() != null) {
+            sectorMinistriesAllDTO.setAsistentes(sectorMinistriesAllModel.getAsistentes());
+        }
+        if(sectorMinistriesAllDTO.getTotal() != null) {
+            sectorMinistriesAllDTO.setTotal(sectorMinistriesAllModel.getTotal());
+        }
+        return sectorMinistriesAllDTO;
     }
 
     private SectorMinistriesDTO fixSpacesCampsSectorMinistries(SectorMinistriesModel sectorMinistriesModel) {

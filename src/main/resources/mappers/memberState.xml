@@ -4,7 +4,7 @@
 <mapper namespace="com.svcbackend.mapper.MemberStateMapper">
 
     <resultMap id="MemberStateMap" type="com.svcbackend.model.MemberStateModel">
-        <id property="idEstadoMiembro" column="idEstadoMiembro"/>
+        <id property="idEstadoMiembro" column="idEstado_miembro"/>
         <result property="estadoMiembro" column="estado_miembro"/>
     </resultMap>
 
@@ -13,21 +13,21 @@
     </select>
 
     <select id="findByIdMemberState" parameterType="int" resultMap="MemberStateMap">
-        SELECT * FROM estado_miembro WHERE idEstado_miembro = #{idEstado_miembro}
+        SELECT * FROM estado_miembro WHERE idEstado_miembro = #{idEstadoMiembro}
     </select>
 
     <insert id="registerMemberState" useGeneratedKeys="true" keyProperty="idEstadoMiembro">
-        INSERT INTO estado_miembro (estado_miembro) VALUES (#{estado_miembro})
+        INSERT INTO estado_miembro (estado_miembro) VALUES (#{estadoMiembro})
     </insert>
 
     <update id="updateMemberState">
         UPDATE estado_miembro
-        SET estado_miembro = #{estado_miembro}
-        WHERE idEstado_miembro = #{idEstado_miembro}
+        SET estado_miembro = #{estadoMiembro}
+        WHERE idEstado_miembro = #{idEstadoMiembro}
     </update>
 
     <delete id="deleteMemberState"  parameterType="int">
-        DELETE FROM estado_miembro WHERE idEstado_miembro = #{idEstado_miembro}
+        DELETE FROM estado_miembro WHERE idEstado_miembro = #{idEstadoMiembro}
     </delete>
 
 </mapper>

@@ -13,21 +13,21 @@
     </select>
 
     <select id="findByIdCellState" parameterType="int" resultMap="CellStateMap">
-        SELECT * FROM estado_celula WHERE idEstado_celula = #{idEstado_celula}
+        SELECT * FROM estado_celula WHERE idEstado_celula = #{idEstadoCelula}
     </select>
 
     <insert id="registerCellState" useGeneratedKeys="true" keyProperty="idEstadoCelula">
-        INSERT INTO estado_celula (estado_celula) VALUES (#{estado_celula})
+        INSERT INTO estado_celula (estado_celula) VALUES (#{estadoCelula})
     </insert>
 
     <update id="updateCellState">
         UPDATE estado_celula
-        SET estado_celula = #{estado_celula}
-        WHERE idEstado_celula = #{idEstado_celula}
+        SET estado_celula = #{estadoCelula}
+        WHERE idEstado_celula = #{idEstadoCelula}
     </update>
 
     <delete id="deleteCellState"  parameterType="int">
-        DELETE FROM estado_celula WHERE idEstado_celula = #{idEstado_celula}
+        DELETE FROM estado_celula WHERE idEstado_celula = #{idEstadoCelula}
     </delete>
 
 </mapper>

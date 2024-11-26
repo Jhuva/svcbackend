@@ -4,7 +4,7 @@
 <mapper namespace="com.svcbackend.mapper.LeaderStateMapper">
 
     <resultMap id="LeaderStateMap" type="com.svcbackend.model.LeaderStateModel">
-        <id property="idEstadoLider" column="idEstadoLider"/>
+        <id property="idEstadoLider" column="idEstado_lider"/>
         <result property="estadoLider" column="estado_lider"/>
     </resultMap>
 
@@ -13,21 +13,21 @@
     </select>
 
     <select id="findByIdLeaderState" parameterType="int" resultMap="LeaderStateMap">
-        SELECT * FROM estado_lider WHERE idEstado_lider = #{idEstado_lider}
+        SELECT * FROM estado_lider WHERE idEstado_lider = #{idEstadoLider}
     </select>
 
     <insert id="registerLeaderState" useGeneratedKeys="true" keyProperty="idEstadoLider">
-        INSERT INTO estado_lider (estado_lider) VALUES (#{estado_lider})
+        INSERT INTO estado_lider (estado_lider) VALUES (#{estadoLider})
     </insert>
 
     <update id="updateLeaderState">
         UPDATE estado_lider
-        SET estado_lider = #{estado_lider}
-        WHERE idEstado_lider = #{idEstado_lider}
+        SET estado_lider = #{estadoLider}
+        WHERE idEstado_lider = #{idEstadoLider}
     </update>
 
     <delete id="deleteLeaderState"  parameterType="int">
-        DELETE FROM estado_lider WHERE idEstado_lider = #{idEstado_lider}
+        DELETE FROM estado_lider WHERE idEstado_lider = #{idEstadoLider}
     </delete>
 
 </mapper>

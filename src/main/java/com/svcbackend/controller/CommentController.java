@@ -21,6 +21,11 @@ public class CommentController {
         return commentService.findAllComment();
     }
 
+    @GetMapping("/table")
+    public GenericResponse<Object> findAllTableComment() throws GenericException {
+        return commentService.findAllTableComment();
+    }
+
     @GetMapping("/{idComment}")
     public GenericResponse<Object> findByIdComment(@PathVariable("idComment") Integer idComment) throws GenericException {
         return commentService.findByIdComment(idComment);

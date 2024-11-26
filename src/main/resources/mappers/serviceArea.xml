@@ -4,7 +4,7 @@
 <mapper namespace="com.svcbackend.mapper.ServiceAreaMapper">
 
     <resultMap id="ServiceAreaMap" type="com.svcbackend.model.ServiceAreaModel">
-        <id property="idAreaServicio" column="idAreaServicio"/>
+        <id property="idAreaServicio" column="idArea_servicio"/>
         <result property="areaServicio" column="area_servicio"/>
     </resultMap>
 
@@ -13,21 +13,21 @@
     </select>
 
     <select id="findByIdServiceArea" parameterType="int" resultMap="ServiceAreaMap">
-        SELECT * FROM area_servicio WHERE idArea_servicio = #{idArea_servicio}
+        SELECT * FROM area_servicio WHERE idArea_servicio = #{idAreaServicio}
     </select>
 
     <insert id="registerServiceArea" useGeneratedKeys="true" keyProperty="idAreaServicio">
-        INSERT INTO area_servicio (area_servicio) VALUES (#{area_servicio})
+        INSERT INTO area_servicio (area_servicio) VALUES (#{areaServicio})
     </insert>
 
     <update id="updateServiceArea">
         UPDATE area_servicio
-        SET area_servicio = #{area_servicio}
-        WHERE idArea_servicio = #{idArea_servicio}
+        SET area_servicio = #{areaServicio}
+        WHERE idArea_servicio = #{idAreaServicio}
     </update>
 
     <delete id="deleteServiceArea"  parameterType="int">
-        DELETE FROM area_servicio WHERE idArea_servicio = #{idArea_servicio}
+        DELETE FROM area_servicio WHERE idArea_servicio = #{idAreaServicio}
     </delete>
 
 </mapper>

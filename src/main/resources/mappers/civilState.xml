@@ -13,21 +13,21 @@
     </select>
 
     <select id="findByIdCivilState" parameterType="int" resultMap="CivilStateMap">
-        SELECT * FROM estado_civil WHERE idEstado_civil = #{idEstado_civil}
+        SELECT * FROM estado_civil WHERE idEstado_civil = #{idEstadoCivil}
     </select>
 
     <insert id="registerCivilState" useGeneratedKeys="true" keyProperty="idEstadoCivil">
-        INSERT INTO estado_civil (estado_civil) VALUES (#{estado_civil})
+        INSERT INTO estado_civil (estado_civil) VALUES (#{estadoCivil})
     </insert>
 
     <update id="updateCivilState">
         UPDATE estado_civil
-        SET estado_civil = #{estado_civil}
-        WHERE idEstado_civil = #{idEstado_civil}
+        SET estado_civil = #{estadoCivil}
+        WHERE idEstado_civil = #{idEstadoCivil}
     </update>
 
     <delete id="deleteCivilState"  parameterType="int">
-        DELETE FROM estado_civil WHERE idEstado_civil = #{idEstado_civil}
+        DELETE FROM estado_civil WHERE idEstado_civil = #{idEstadoCivil}
     </delete>
 
 </mapper>

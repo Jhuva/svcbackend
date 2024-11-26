@@ -1,9 +1,11 @@
 package com.svcbackend.service.impl;
 
+import com.svcbackend.dto.SectorMinistriesAllDTO;
+import com.svcbackend.dto.ZoneAllDTO;
 import com.svcbackend.dto.ZoneDTO;
 import com.svcbackend.exception.GenericException;
 import com.svcbackend.mapper.ZoneMapper;
-import com.svcbackend.model.ZoneModel;
+import com.svcbackend.model.*;
 import com.svcbackend.response.GenericResponse;
 import com.svcbackend.service.ZoneService;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +48,47 @@ public class ZoneImpl implements ZoneService {
     }
 
     @Override
+    public GenericResponse<Object> findAllTableZone() throws GenericException {
+        log.info("Obteniendo la lista de zonas...");
+        try {
+            List<ZoneAllModel> listAllZone = zoneMapper.findAllTableZone();
+            List<ZoneAllDTO> listAllZoneDTO = new ArrayList<>();
+            if(listAllZone != null && !listAllZone.isEmpty()) {
+                listAllZone.forEach(zone -> {
+                    ZoneAllDTO sectorMinistriesAllDTO = fixSpacesCampsTableZone(zone);
+                    listAllZoneDTO.add(sectorMinistriesAllDTO);
+                });
+                log.info("Lista de Zone obtenidos");
+                return new GenericResponse<>(true, listAllZoneDTO, "Lista de Zonas obtenidos");
+            } else {
+                log.info("No se cuenta con Zone");
+                return new GenericResponse<>(false, "No hay lista de Zonas");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new GenericException("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public GenericResponse<Object> findZoneNumbers() throws GenericException {
+        log.info("Obteniendo los numeros de zonas");
+        try {
+            ZoneNumModel zoneRes = zoneMapper.findZoneNumbers();
+            if(zoneRes != null) {
+                log.info("Numeros de Zonas obtenidos");
+                return new GenericResponse<>(true, zoneRes, "Números Zonas obtenidos");
+            } else {
+                log.info("No se cuenta con Números de Zonas");
+                return new GenericResponse<>(false, "No hay números de Zonas");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new GenericException("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
     public GenericResponse<Object> findByIdZone(Integer idZone) throws GenericException {
         log.info("Obteniendo la zona {}...", idZone);
         try {
@@ -57,6 +100,22 @@ public class ZoneImpl implements ZoneService {
             } else {
                 log.info("No se cuenta con el siguiente zona {}", idZone);
                 return new GenericResponse<>(false, "No se cuenta con la zona " + idZone);
+            }
+        } catch (Exception e) {
+            throw new GenericException("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public GenericResponse<Object> findByIdZoneDetail(Integer idZone) throws GenericException {
+        log.info("Obteniendo el detalle de Zona {}...", idZone);
+        try {
+            ZoneDetailModel zoneRes = zoneMapper.findByIdZoneDetail(idZone);
+            if(zoneRes != null) {
+                log.info("Detalle del Zona {}", idZone);
+                return new GenericResponse<>( true, zoneRes, "Zona " + idZone + " obtenido.");
+            } else {
+                return new GenericResponse<>(false, "Zona no existe " + idZone);
             }
         } catch (Exception e) {
             throw new GenericException("Error: " + e.getMessage());
@@ -128,6 +187,36 @@ public class ZoneImpl implements ZoneService {
             e.printStackTrace();
             return new GenericResponse<>(false, "Error al momento de eliminar la Zona " + idZone);
         }
+    }
+
+    private ZoneAllDTO fixSpacesCampsTableZone(ZoneAllModel zoneAllModel) {
+        ZoneAllDTO zoneAllDTO = new ZoneAllDTO();
+        BeanUtils.copyProperties(zoneAllModel, zoneAllDTO);
+        if(zoneAllDTO.getNombre() != null) {
+            zoneAllDTO.setNombre(zoneAllModel.getNombre().trim());
+        }
+        if(zoneAllDTO.getNombrePsZonal() != null) {
+            zoneAllDTO.setNombrePsZonal(zoneAllModel.getNombrePsZonal().trim());
+        }
+        if(zoneAllDTO.getCantSectores() != null) {
+            zoneAllDTO.setCantSectores(zoneAllModel.getCantSectores());
+        }
+        if(zoneAllDTO.getCantSupervisiones() != null) {
+            zoneAllDTO.setCantSupervisiones(zoneAllModel.getCantSupervisiones());
+        }
+        if(zoneAllDTO.getCantCelulas() != null) {
+            zoneAllDTO.setCantCelulas(zoneAllModel.getCantCelulas());
+        }
+        if(zoneAllDTO.getMiembros() != null) {
+            zoneAllDTO.setMiembros(zoneAllModel.getMiembros());
+        }
+        if(zoneAllDTO.getAsistentes() != null) {
+            zoneAllDTO.setAsistentes(zoneAllModel.getAsistentes());
+        }
+        if(zoneAllDTO.getTotal() != null) {
+            zoneAllDTO.setTotal(zoneAllModel.getTotal());
+        }
+        return zoneAllDTO;
     }
 
     private ZoneDTO fixSpacesCampsZone(ZoneModel zoneModel) {

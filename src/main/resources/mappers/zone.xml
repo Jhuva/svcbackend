@@ -3,14 +3,188 @@
 
 <mapper namespace="com.svcbackend.mapper.ZoneMapper">
 
+    <resultMap id="ZoneNumberMap" type="com.svcbackend.model.ZoneNumModel">
+        <result property="total" column="total"/>
+    </resultMap>
+
     <resultMap id="ZoneMap" type="com.svcbackend.model.ZoneModel">
         <id property="idZona" column="idZona"/>
         <result property="nombre" column="nombre"/>
         <result property="nombrePsZonal" column="nombre_ps_zonal"/>
     </resultMap>
 
+    <resultMap id="ZoneAllMap" type="com.svcbackend.model.ZoneAllModel">
+        <result property="nombre" column="nombre"/>
+        <result property="nombrePsZonal" column="nombre_ps_zonal"/>
+        <result property="cantSectores" column="cant_sectores"/>
+        <result property="cantSupervisiones" column="cant_supervisiones"/>
+        <result property="cantCelulas" column="cant_celulas"/>
+        <result property="miembros" column="miembros"/>
+        <result property="asistentes" column="asistentes"/>
+        <result property="total" column="total"/>
+    </resultMap>
+
+    <resultMap id="ZoneDetailMap" type="com.svcbackend.model.ZoneDetailModel">
+        <result property="nombre" column="nombre"/>
+        <result property="nombrePsZonal" column="nombre_ps_zonal"/>
+        <result property="cantSectores" column="cant_sectores"/>
+        <result property="cantSupervisiones" column="cant_supervisiones"/>
+        <result property="cantCelulas" column="cant_celulas"/>
+        <result property="miembros" column="miembros"/>
+        <result property="asistentes" column="asistentes"/>
+        <result property="liderA" column="lider_a"/>
+        <result property="liderB" column="lider_b"/>
+        <result property="total" column="total"/>
+        <result property="planSectorMinisterio" column="plan_sector_ministerio" typeHandler="com.svcbackend.service.impl.JsonTypeHandler"/>
+        <result property="planSupervisiones" column="plan_supervisiones" typeHandler="com.svcbackend.service.impl.JsonTypeHandler"/>
+        <result property="planCelulas" column="plan_celulas" typeHandler="com.svcbackend.service.impl.JsonTypeHandler"/>
+        <result property="planLideres" column="plan_lideres" typeHandler="com.svcbackend.service.impl.JsonTypeHandler"/>
+    </resultMap>
+
+    <select id="findZoneNumbers" resultMap="ZoneNumberMap">
+        SELECT count(*) AS total FROM mae_zona
+    </select>
+
     <select id="findAllZone" resultMap="ZoneMap">
         SELECT * FROM mae_zona ORDER BY idZona ASC
+    </select>
+
+    <select id="findAllTableZone" resultMap="ZoneAllMap">
+        SELECT
+            mz.nombre, mz.nombre_ps_zonal,
+            (SELECT COUNT(*)
+             FROM mae_sector_minis_zonal msmz
+             WHERE msmz.idzona = mz.idzona ) AS cant_sectores,
+            (SELECT COUNT(*)
+             FROM mae_supervision ms
+                      JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+             WHERE msmz.idzona = mz.idzona) AS cant_supervisiones,
+            (SELECT COUNT(*)
+             FROM mae_celula mc
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                      JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+             WHERE msmz.idzona = mz.idzona) AS cant_celulas,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                      JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+             WHERE rol = 'Miembro' and msmz.idzona = mz.idzona ) AS miembros,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                      JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+             WHERE rol = 'Asistente' and msmz.idzona = mz.idzona ) AS asistentes,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                      JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+             WHERE msmz.idzona = mz.idzona ) AS total
+        FROM mae_zona mz
+        ORDER BY mz.idzona DESC
+    </select>
+
+    <select id="findByIdZoneDetail" parameterType="int" resultMap="ZoneDetailMap">
+        SELECT
+            mz.nombre,
+            mz.nombre_ps_zonal,
+            (SELECT COUNT(*)
+             FROM mae_sector_minis_zonal msmz
+             WHERE msmz.idzona = mz.idzona ) AS cant_sectores,
+            (SELECT COUNT(*)
+             FROM mae_supervision ms
+                      JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+             WHERE msmz.idzona = mz.idzona) AS cant_supervisiones,
+            (SELECT COUNT(*)
+             FROM mae_celula mc
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                      JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+             WHERE msmz.idzona = mz.idzona) AS cant_celulas,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                      JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+             WHERE rol = 'Miembro' AND msmz.idzona = mz.idzona ) AS miembros,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                      JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+             WHERE rol = 'Asistente' AND msmz.idzona = mz.idzona ) AS asistentes,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                      join mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+                      JOIN mae_lider ml ON c.idcristiano = ml.idcristiano
+             WHERE grado = 'A' AND msmz.idzona = mz.idzona) AS lider_a,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                      JOIN mae_lider ml ON c.idcristiano = ml.idcristiano
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                      join mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+             WHERE grado = 'B' AND msmz.idzona = mz.idzona) AS lider_b,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                      JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+             WHERE msmz.idzona = mz.idzona ) AS total,
+            (SELECT JSON_AGG(JSON_BUILD_OBJECT(
+                    'nombre', msmz.nombre,
+                    'encargado', msmz.nombre_col_past,
+                    'supervisiones', (SELECT COUNT(*)
+                                      FROM mae_supervision ms2
+                                      WHERE ms2.idsector_ministerio = msmz.idsector_ministerio),
+                    'asistentes', (SELECT COUNT(*)
+                                   FROM mae_cristiano c
+                                            JOIN mae_celula mc3 ON c.idcelula = mc3.idcelula
+                                            JOIN mae_supervision ms3 ON mc3.idsupervision = ms3.idsupervision
+                                   WHERE ms3.idsector_ministerio = msmz.idsector_ministerio)))
+             FROM mae_sector_minis_zonal msmz
+             WHERE msmz.idzona = mz.idzona) AS plan_sector_ministerio,
+            (SELECT JSON_AGG(JSON_BUILD_OBJECT(
+                    'nombre', ms.nombre_supervision,
+                    'supervisor', ms.nombre_supervisor,
+                    'celulas', (SELECT COUNT(*)
+                                FROM mae_celula mc2
+                                WHERE mc2.idsupervision = ms.idsupervision),
+                    'asistentes', (SELECT COUNT(*)
+                                   FROM mae_cristiano c
+                                            JOIN mae_celula mc3 ON c.idcelula = mc3.idcelula
+                                   WHERE mc3.idsupervision = ms.idsupervision)))
+             FROM mae_supervision ms
+                      JOIN mae_sector_minis_zonal msmz2 ON ms.idsector_ministerio = msmz2.idsector_ministerio
+             WHERE msmz2.idzona = mz.idzona) AS plan_supervisiones,
+            (SELECT JSON_AGG(JSON_BUILD_OBJECT(
+                    'numero', mc.numero_celula,
+                    'nombre_lider', mc.nombre_lider,
+                    'direccion', mc.direccion,
+                    'estado', mc.estado))
+             FROM mae_celula mc
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                      JOIN mae_sector_minis_zonal msmz2 ON ms.idsector_ministerio = msmz2.idsector_ministerio
+             WHERE msmz2.idzona = mz.idzona) AS plan_celulas,
+            (SELECT JSON_AGG(JSON_BUILD_OBJECT(
+                    'nombres', mc.nombres,
+                    'apellidos', mc.apellidos,
+                    'celulas', (SELECT COUNT(*)
+                                FROM mae_celula mc2
+                                WHERE mc2.nombre_lider = CONCAT(mc.nombres, ' ', mc.apellidos) AND mc2.idsupervision = ms.idsupervision),
+                    'grado', ml.grado,
+                    'estado', ml.estado))
+             FROM mae_lider ml
+                      JOIN mae_cristiano mc ON ml.idcristiano = mc.idcristiano
+                      JOIN mae_celula mc2 ON mc.idcelula = mc2.idcelula
+                      JOIN mae_supervision ms ON mc2.idsupervision = ms.idsupervision
+                      JOIN mae_sector_minis_zonal msmz2 ON ms.idsector_ministerio = msmz2.idsector_ministerio
+             WHERE msmz2.idzona = mz.idzona) AS plan_lideres
+        FROM mae_zona mz
+        WHERE mz.idzona = #{idZona}
     </select>
 
     <select id="findByIdZone" parameterType="int" resultMap="ZoneMap">
@@ -18,13 +192,13 @@
     </select>
 
     <insert id="registerZone" useGeneratedKeys="true" keyProperty="idZona">
-        INSERT INTO mae_zona (nombre, nombre_ps_zonal) VALUES (#{nombre}, #{nombre_ps_zonal})
+        INSERT INTO mae_zona (nombre, nombre_ps_zonal) VALUES (#{nombre}, #{nombrePsZonal})
     </insert>
 
     <update id="updateZone">
         UPDATE mae_zona
         SET nombre = #{nombre},
-            nombre_ps_zonal = #{nombre_ps_zonal}
+            nombre_ps_zonal = #{nombrePsZonal}
         WHERE idZona = #{idZona}
     </update>
 

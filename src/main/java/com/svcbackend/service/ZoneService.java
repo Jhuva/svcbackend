@@ -6,7 +6,10 @@ import com.svcbackend.response.GenericResponse;
 
 public interface ZoneService {
     GenericResponse<Object> findAllZone() throws GenericException;
+    GenericResponse<Object> findAllTableZone() throws GenericException;
+    GenericResponse<Object> findZoneNumbers() throws GenericException;
     GenericResponse<Object> findByIdZone(Integer idZona) throws GenericException;
+    GenericResponse<Object> findByIdZoneDetail(Integer idZone) throws GenericException;
     GenericResponse<Object> registerZone(ZoneModel zone);
     GenericResponse<Object> updateZone(ZoneModel zone);
     GenericResponse<Object> deleteZone(Integer idZona);

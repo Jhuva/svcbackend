@@ -21,9 +21,24 @@ public class ZoneController {
         return zoneService.findAllZone();
     }
 
+    @GetMapping("/table")
+    public GenericResponse<Object> findAllTableZone() throws GenericException {
+        return zoneService.findAllTableZone();
+    }
+
+    @GetMapping("/numbers")
+    public GenericResponse<Object> findZoneNumbers() throws GenericException {
+        return zoneService.findZoneNumbers();
+    }
+
     @GetMapping("/{idZone}")
     public GenericResponse<Object> findByIdZone(@PathVariable("idZone") Integer idZone) throws GenericException {
         return zoneService.findByIdZone(idZone);
+    }
+
+    @GetMapping("/detail/{idZone}")
+    public GenericResponse<Object> findByIdZoneDetail(@PathVariable("idZone") Integer idZone) throws GenericException {
+        return zoneService.findByIdZoneDetail(idZone);
     }
 
     @PostMapping("/register")

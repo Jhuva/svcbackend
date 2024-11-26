@@ -1,9 +1,10 @@
 package com.svcbackend.service.impl;
 
+import com.svcbackend.dto.SupervisionAllDTO;
 import com.svcbackend.dto.SupervisionDTO;
 import com.svcbackend.exception.GenericException;
 import com.svcbackend.mapper.SupervisionMapper;
-import com.svcbackend.model.SupervisionModel;
+import com.svcbackend.model.*;
 import com.svcbackend.response.GenericResponse;
 import com.svcbackend.service.SupervisionService;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,47 @@ public class SupervisionImpl implements SupervisionService {
     }
 
     @Override
+    public GenericResponse<Object> findAllTableSupervision() throws GenericException {
+        log.info("Obteniendo la lista de supervisiones...");
+        try {
+            List<SupervisionAllModel> listAllSupervision = supervisionMapper.findAllTableSupervision();
+            List<SupervisionAllDTO> listAllSupervisionDTO = new ArrayList<>();
+            if(listAllSupervision != null && !listAllSupervision.isEmpty()) {
+                listAllSupervision.forEach(supervision -> {
+                    SupervisionAllDTO supervisionAllDTO = fixSpacesCampsTableSupervision(supervision);
+                    listAllSupervisionDTO.add(supervisionAllDTO);
+                });
+                log.info("Lista de supervisiones obtenidos");
+                return new GenericResponse<>(true, listAllSupervisionDTO, "Lista de Supervisiones obtenidos");
+            } else {
+                log.info("No se cuenta con supervisiones");
+                return new GenericResponse<>(false, "No hay lista de Supervisiones");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new GenericException("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public GenericResponse<Object> findSupervisionNumbers() throws GenericException {
+        log.info("Obteniendo los numeros de las supervisiones");
+        try {
+            SupervisionNumModel supervisionNumRes = supervisionMapper.findSupervisionNumbers();
+            if(supervisionNumRes != null) {
+                log.info("Numeros de supervisiones obtenidos");
+                return new GenericResponse<>(true, supervisionNumRes, "Números supervisiones obtenidos");
+            } else {
+                log.info("No se cuenta con Numeros de supervisiones");
+                return new GenericResponse<>(false, "No hay números de supervisiones");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new GenericException("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
     public GenericResponse<Object> findByIdSupervisionService(Integer idSupervision) throws GenericException {
         log.info("Obteniendo Supervision {}...", idSupervision);
         try {
@@ -57,6 +99,22 @@ public class SupervisionImpl implements SupervisionService {
             } else {
                 log.info("No se cuenta con la siguiente Supervision {}", idSupervision);
                 return new GenericResponse<>(false, "No se cuenta con la Supervision " + idSupervision);
+            }
+        } catch (Exception e) {
+            throw new GenericException("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public GenericResponse<Object> findByIdSupervisionDetail(Integer idSupervision) throws GenericException {
+        log.info("Obteniendo el detalle de la supervision {}...", idSupervision);
+        try {
+            SupervisionDetailModel supervisionRes = supervisionMapper.findByIdSupervisionDetail(idSupervision);
+            if(supervisionRes != null) {
+                log.info("Detalle de la supervision {}", idSupervision);
+                return new GenericResponse<>( true, supervisionRes, "Célula " + idSupervision + " obtenido.");
+            } else {
+                return new GenericResponse<>(false, "Célula no existe " + idSupervision);
             }
         } catch (Exception e) {
             throw new GenericException("Error: " + e.getMessage());
@@ -129,6 +187,37 @@ public class SupervisionImpl implements SupervisionService {
             return new GenericResponse<>(false, "Error al momento de eliminar la supervisión " + idSupervision);
         }
     }
+
+    private SupervisionAllDTO fixSpacesCampsTableSupervision(SupervisionAllModel supervisionAllModel) {
+        SupervisionAllDTO supervisionAllDTO = new SupervisionAllDTO();
+        BeanUtils.copyProperties(supervisionAllModel, supervisionAllDTO);
+        if(supervisionAllDTO.getSupervision() != null) {
+            supervisionAllDTO.setSupervision(supervisionAllModel.getSupervision().trim());
+        }
+        if(supervisionAllDTO.getSupervisor() != null) {
+            supervisionAllDTO.setSupervisor(supervisionAllModel.getSupervisor().trim());
+        }
+        if(supervisionAllDTO.getSectMinisterio() != null) {
+            supervisionAllDTO.setSectMinisterio(supervisionAllModel.getSectMinisterio().trim());
+        }
+        if(supervisionAllDTO.getNombreZona() != null) {
+            supervisionAllDTO.setNombreZona(supervisionAllModel.getNombreZona().trim());
+        }
+        if(supervisionAllDTO.getCantCelulas() != null) {
+            supervisionAllDTO.setCantCelulas(supervisionAllModel.getCantCelulas());
+        }
+        if(supervisionAllDTO.getMiembros() != null) {
+            supervisionAllDTO.setMiembros(supervisionAllModel.getMiembros());
+        }
+        if(supervisionAllDTO.getAsistentes() != null) {
+            supervisionAllDTO.setAsistentes(supervisionAllModel.getAsistentes());
+        }
+        if(supervisionAllDTO.getTotal() != null) {
+            supervisionAllDTO.setTotal(supervisionAllModel.getTotal());
+        }
+        return supervisionAllDTO;
+    }
+
 
     private SupervisionDTO fixSpacesCampsSupervision(SupervisionModel supervisionModel) {
         SupervisionDTO supervisionDTO = new SupervisionDTO();

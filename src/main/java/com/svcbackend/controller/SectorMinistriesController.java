@@ -21,9 +21,24 @@ public class SectorMinistriesController {
         return sectorMinistriesService.findAllMinistriesService();
     }
 
+    @GetMapping("/table")
+    public GenericResponse<Object> findAllTableSectorMinistries() throws GenericException {
+        return sectorMinistriesService.findAllTableSectorMinistries();
+    }
+
+    @GetMapping("/numbers")
+    public GenericResponse<Object> findSectorMinistriesNumbers() throws GenericException {
+        return sectorMinistriesService.findSectorMinistriesNumbers();
+    }
+
     @GetMapping("/{idSectorMinistries}")
     public GenericResponse<Object> findByIdSectorMinistries(@PathVariable("idSectorMinistries") Integer idSectorMinistries) throws GenericException {
         return sectorMinistriesService.findByIdMinistriesService(idSectorMinistries);
+    }
+
+    @GetMapping("/detail/{idSectorMinistries}")
+    public GenericResponse<Object> findByIdSectorMinistriesDetail(@PathVariable("idSectorMinistries") Integer idSectorMinistries) throws GenericException {
+        return sectorMinistriesService.findByIdSectorMinistriesDetail(idSectorMinistries);
     }
 
     @PostMapping("/register")

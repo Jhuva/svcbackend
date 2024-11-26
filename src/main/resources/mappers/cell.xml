@@ -70,6 +70,7 @@
         FROM mae_celula mc
                  LEFT JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
                  LEFT JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+        ORDER BY mc.idcelula DESC
     </select>
 
     <select id="findByIdCell" parameterType="int" resultMap="CellMap">
@@ -101,19 +102,19 @@
                  LEFT JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
                  LEFT JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
                  LEFT JOIN mae_zona mz ON msmz.idzona = mz.idzona
-        WHERE mc.idcelula = 14
+        WHERE mc.idcelula = #{idCelula}
     </select>
 
     <insert id="registerCell" useGeneratedKeys="true" keyProperty="idCelula">
         INSERT INTO mae_celula (idSupervision, numero_celula, nombre_lider, direccion, estado)
-        VALUES (#{idSupervision}, #{numero_celula}, #{nombre_lider}, #{direccion}, #{estado})
+        VALUES (#{idSupervision}, #{numeroCelula}, #{nombreLider}, #{direccion}, #{estado})
     </insert>
 
     <update id="updateCell">
         UPDATE mae_celula
         SET idSupervision = #{idSupervision},
-            numero_celula = #{numero_celula},
-            nombre_lider = #{nombre_lider},
+            numero_celula = #{numeroCelula},
+            nombre_lider = #{nombreLider},
             direccion = #{direccion},
             estado = #{estado}
         WHERE idCelula = #{idCelula}

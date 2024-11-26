@@ -1,9 +1,11 @@
 package com.svcbackend.service.impl;
 
 import com.svcbackend.dto.CommentDTO;
+import com.svcbackend.dto.CommentTableDTO;
 import com.svcbackend.exception.GenericException;
 import com.svcbackend.mapper.CommentMapper;
 import com.svcbackend.model.CommentModel;
+import com.svcbackend.model.CommentTableModel;
 import com.svcbackend.response.GenericResponse;
 import com.svcbackend.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,29 @@ public class CommentImpl implements CommentService {
                 });
                 log.info("Lista de Comentarios obtenidos");
                 return new GenericResponse<>(true, listCommentDTO, "Lista de Comentarios obtenidos");
+            } else {
+                log.info("No se cuenta con Comentarios");
+                return new GenericResponse<>(false, "No hay lista de Comentarios");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new GenericException("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public GenericResponse<Object> findAllTableComment() throws GenericException {
+        log.info("Obteniendo la lista de Comentarios...");
+        try {
+            List<CommentTableModel> listAllComment = commentMapper.findAllTableComment();
+            List<CommentTableDTO> listAllSectorMinistriesDTO = new ArrayList<>();
+            if(listAllComment != null && !listAllComment.isEmpty()) {
+                listAllComment.forEach(comment -> {
+                    CommentTableDTO sectorMinistriesAllDTO = fixSpacesCampsTableComment(comment);
+                    listAllSectorMinistriesDTO.add(sectorMinistriesAllDTO);
+                });
+                log.info("Lista de Comentarios obtenidos");
+                return new GenericResponse<>(true, listAllSectorMinistriesDTO, "Lista de Comentarios obtenidos");
             } else {
                 log.info("No se cuenta con Comentarios");
                 return new GenericResponse<>(false, "No hay lista de Comentarios");
@@ -128,6 +153,39 @@ public class CommentImpl implements CommentService {
             e.printStackTrace();
             return new GenericResponse<>(false, "Error al momento de eliminar el comentario " + idComment);
         }
+    }
+
+    private CommentTableDTO fixSpacesCampsTableComment(CommentTableModel commentTableModel) {
+        CommentTableDTO commentTableDTO = new CommentTableDTO();
+        BeanUtils.copyProperties(commentTableModel, commentTableDTO);
+        if(commentTableDTO.getIdCristiano() != null) {
+            commentTableDTO.setIdCristiano(commentTableModel.getIdCristiano());
+        }
+        if(commentTableDTO.getNombres() != null) {
+            commentTableDTO.setNombres(commentTableModel.getNombres().trim());
+        }
+        if(commentTableDTO.getApellidos() != null) {
+            commentTableDTO.setApellidos(commentTableModel.getApellidos().trim());
+        }
+        if(commentTableDTO.getEstado() != null) {
+            commentTableDTO.setEstado(commentTableModel.getEstado().trim());
+        }
+        if(commentTableDTO.getAreaServicio() != null) {
+            commentTableDTO.setAreaServicio(commentTableModel.getAreaServicio());
+        }
+        if(commentTableDTO.getGrado() != null) {
+            commentTableDTO.setGrado(commentTableModel.getGrado());
+        }
+        if(commentTableDTO.getRol() != null) {
+            commentTableDTO.setRol(commentTableModel.getRol());
+        }
+        if(commentTableDTO.getSectorMinisterio() != null) {
+            commentTableDTO.setSectorMinisterio(commentTableModel.getSectorMinisterio());
+        }
+        if(commentTableDTO.getZona() != null) {
+            commentTableDTO.setZona(commentTableModel.getZona());
+        }
+        return commentTableDTO;
     }
 
     private CommentDTO fixSpacesCampsComment(CommentModel commentModel) {

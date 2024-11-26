@@ -21,9 +21,24 @@ public class SupervisionController {
         return supervisionService.findAllSupervisionService();
     }
 
+    @GetMapping("/table")
+    public GenericResponse<Object> findAllTableSupervision() throws GenericException {
+        return supervisionService.findAllTableSupervision();
+    }
+
+    @GetMapping("/numbers")
+    public GenericResponse<Object> findSupervisionNumbers() throws GenericException {
+        return supervisionService.findSupervisionNumbers();
+    }
+
     @GetMapping("/{idSupervision}")
     public GenericResponse<Object> findByIdSupervision(@PathVariable("idSupervision") Integer idSupervision) throws GenericException {
         return supervisionService.findByIdSupervisionService(idSupervision);
+    }
+
+    @GetMapping("/detail/{idSupervision}")
+    public GenericResponse<Object> findByIdCellDetail(@PathVariable("idSupervision") Integer idSupervision) throws GenericException {
+        return supervisionService.findByIdSupervisionDetail(idSupervision);
     }
 
     @PostMapping("/register")

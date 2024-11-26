@@ -6,7 +6,10 @@ import com.svcbackend.response.GenericResponse;
 
 public interface SectorMinistriesService {
     GenericResponse<Object> findAllMinistriesService() throws GenericException;
+    GenericResponse<Object> findAllTableSectorMinistries() throws GenericException;
+    GenericResponse<Object> findSectorMinistriesNumbers() throws GenericException;
     GenericResponse<Object> findByIdMinistriesService(Integer idSector_ministerio) throws GenericException;
+    GenericResponse<Object> findByIdSectorMinistriesDetail(Integer idSector_ministerio) throws GenericException;
     GenericResponse<Object> registerMinistriesService(SectorMinistriesModel sectorMinistries);
     GenericResponse<Object> updateMinistriesService(SectorMinistriesModel sectorMinistries);
     GenericResponse<Object> deleteMinistriesService(Integer idSector_ministerio);

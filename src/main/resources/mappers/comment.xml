@@ -9,8 +9,33 @@
         <result property="comentario" column="comentario"/>
     </resultMap>
 
+    <resultMap id="CommentAllMap" type="com.svcbackend.model.CommentTableModel">
+        <result property="idCristiano" column="idCristiano"/>
+        <result property="nombres" column="nombres"/>
+        <result property="apellidos" column="apellidos"/>
+        <result property="estado" column="estado"/>
+        <result property="areaServicio" column="area_servicio"/>
+        <result property="grado" column="grado"/>
+        <result property="rol" column="rol"/>
+        <result property="sectorMinisterio" column="sector_ministerio"/>
+        <result property="zona" column="zona"/>
+    </resultMap>
+
     <select id="findAllComment" resultMap="CommentMap">
         SELECT * FROM mae_comentario ORDER BY idComentario ASC
+    </select>
+
+    <select id="findAllTableComment" resultMap="CommentAllMap">
+        SELECT
+            mc.idcristiano, mc.nombres, mc.apellidos, mc.estado,
+            ml.area_servicio, ml.grado, ml.rol,
+            msmz.nombre AS sector_ministerio, mz.nombre AS zona
+        FROM mae_cristiano mc
+                 LEFT JOIN mae_lider ml ON mc.idcristiano = ml.idcristiano
+                 LEFT JOIN mae_celula mc2 ON mc.idcelula = mc2.idcelula
+                 LEFT JOIN mae_supervision ms ON mc2.idsupervision = ms.idsupervision
+                 LEFT JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+                 LEFT JOIN mae_zona mz ON msmz.idzona = mz.idzona
     </select>
 
     <select id="findByIdComment" parameterType="int" resultMap="CommentMap">

@@ -92,7 +92,7 @@
 
     <insert id="registerChristian" useGeneratedKeys="true" keyProperty="idCristiano">
         INSERT INTO mae_cristiano (idCelula, nombres, apellidos, edad, direccion, email, fec_nacimiento, sexo, estado_civil, grado_profesional, estado, rol, procedencia, ocupacion, telefono)
-        VALUES (#{idCelula}, #{nombres}, #{apellidos}, #{edad}, #{direccion}, #{email}, #{fec_nacimiento}, #{sexo}, #{estado_civil}, #{grado_profesional}, #{estado},#{rol} ,#{procedencia}, #{ocupacion}, #{telefono})
+        VALUES (#{idCelula}, #{nombres}, #{apellidos}, #{edad}, #{direccion}, #{email}, #{fecNacimiento}, #{sexo}, #{estadoCivil}, #{gradoProfesional}, #{estado},#{rol} ,#{procedencia}, #{ocupacion}, #{telefono})
     </insert>
 
     <update id="updateChristian">
@@ -103,10 +103,10 @@
             edad = #{edad},
             direccion = #{direccion},
             email = #{email},
-            fec_nacimiento = #{fec_nacimiento},
+            fec_nacimiento = #{fecNacimiento},
             sexo = #{sexo},
-            estado_civil = #{estado_civil},
-            grado_profesional = #{grado_profesional},
+            estado_civil = #{estadoCivil},
+            grado_profesional = #{gradoProfesional},
             estado = #{estado},
             rol = #{rol},
             procedencia = #{procedencia},

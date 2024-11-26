@@ -4,7 +4,7 @@
 <mapper namespace="com.svcbackend.mapper.ProfessionalGradeMapper">
 
     <resultMap id="ProfessionalGradeMap" type="com.svcbackend.model.ProfessionalGradeModel">
-        <id property="idGradoProfesional" column="idGradoProfesional"/>
+        <id property="idGradoProfesional" column="idGrado_profesional"/>
         <result property="gradoProfesional" column="grado_profesional"/>
     </resultMap>
 
@@ -13,21 +13,21 @@
     </select>
 
     <select id="findByIdProfessionalGrade" parameterType="int" resultMap="ProfessionalGradeMap">
-        SELECT * FROM grado_profesional WHERE idGrado_profesional = #{idGrado_profesional}
+        SELECT * FROM grado_profesional WHERE idGrado_profesional = #{idGradoProfesional}
     </select>
 
     <insert id="registerProfessionalGrade" useGeneratedKeys="true" keyProperty="idGradoProfesional">
-        INSERT INTO grado_profesional (grado_profesional) VALUES (#{grado_profesional})
+        INSERT INTO grado_profesional (grado_profesional) VALUES (#{gradoProfesional})
     </insert>
 
     <update id="updateProfessionalGrade">
         UPDATE grado_profesional
-        SET grado_profesional = #{grado_profesional}
-        WHERE idGrado_profesional = #{idGrado_profesional}
+        SET grado_profesional = #{gradoProfesional}
+        WHERE idGrado_profesional = #{idGradoProfesional}
     </update>
 
     <delete id="deleteProfessionalGrade"  parameterType="int">
-        DELETE FROM grado_profesional WHERE idGrado_profesional = #{idGrado_profesional}
+        DELETE FROM grado_profesional WHERE idGrado_profesional = #{idGradoProfesional}
     </delete>
 
 </mapper>
