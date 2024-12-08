@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class CellAllDTO {
+    private Integer idCelula;
+    private Integer idSupervision;
     private String numeroCelula;
     private String sectorMinisterio;
     private Integer miembros;

@@ -15,6 +15,8 @@
     </resultMap>
 
     <resultMap id="SupervisionAllMap" type="com.svcbackend.model.SupervisionAllModel">
+        <result property="idSectorMinisterio" column="idSector_ministerio"/>
+        <result property="idSupervision" column="idSupervision"/>
         <result property="supervision" column="supervision"/>
         <result property="supervisor" column="supervisor"/>
         <result property="sectMinisterio" column="sect_ministerio"/>
@@ -50,19 +52,19 @@
 
     <select id="findAllTableSupervision" resultMap="SupervisionAllMap">
         SELECT
-            ms.nombre_supervision AS supervision, ms.nombre_supervisor AS supervisor,
-            msmz.nombre AS sect_ministerio, mz.nombre AS nombre_zona,
+            ms.nombre_supervision, ms.nombre_supervisor,
+            msmz.nombre AS sect_ministerio, mz.nombre AS nombre_zona, msmz.idsector_ministerio, ms.idsupervision,
             (SELECT COUNT(*)
              FROM mae_celula mc
              WHERE mc.idsupervision = ms.idsupervision ) AS cant_celulas,
             (SELECT COUNT(*)
              FROM mae_cristiano c
                       JOIN mae_celula mc ON c.idcelula = mc.idcelula
-             WHERE rol = 'Miembro' and mc.idsupervision = ms.idsupervision ) AS miembros,
+             WHERE membresia = 'M' and mc.idsupervision = ms.idsupervision ) AS miembros,
             (SELECT COUNT(*)
              FROM mae_cristiano c
                       JOIN mae_celula mc ON c.idcelula = mc.idcelula
-             WHERE rol = 'Asistente' and mc.idsupervision = ms.idsupervision ) AS asistentes,
+             WHERE membresia = 'A' and mc.idsupervision = ms.idsupervision ) AS asistentes,
             (SELECT COUNT(*)
              FROM mae_cristiano c
                       JOIN mae_celula mc ON c.idcelula = mc.idcelula
@@ -87,11 +89,11 @@
             (SELECT COUNT(*)
              FROM mae_cristiano c
                       JOIN mae_celula mc ON c.idcelula = mc.idcelula
-             WHERE rol = 'Miembro' AND mc.idsupervision = ms.idsupervision ) AS miembros,
+             WHERE membresia = 'M' AND mc.idsupervision = ms.idsupervision ) AS miembros,
             (SELECT COUNT(*)
              FROM mae_cristiano c
                       JOIN mae_celula mc ON c.idcelula = mc.idcelula
-             WHERE rol = 'Asistente' AND mc.idsupervision = ms.idsupervision ) AS asistentes,
+             WHERE membresia = 'A' AND mc.idsupervision = ms.idsupervision ) AS asistentes,
             (SELECT COUNT(*)
              FROM mae_cristiano c
                       JOIN mae_celula mc ON c.idcelula = mc.idcelula

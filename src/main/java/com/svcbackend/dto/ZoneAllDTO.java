@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class ZoneAllDTO {
+    private Integer idZona;
     private String nombre;
     private String nombrePsZonal;
     private Integer cantSectores;

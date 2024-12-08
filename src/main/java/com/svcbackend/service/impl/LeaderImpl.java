@@ -191,6 +191,12 @@ public class LeaderImpl implements LeaderService {
     private LeaderAllDTO fixSpacesCampsTableLeader(LeaderAllModel leaderAllModel) {
         LeaderAllDTO leaderAllDTO = new LeaderAllDTO();
         BeanUtils.copyProperties(leaderAllModel, leaderAllDTO);
+        if(leaderAllDTO.getIdLider() != null) {
+            leaderAllDTO.setIdLider(leaderAllModel.getIdLider());
+        }
+        if(leaderAllDTO.getIdCristiano() != null) {
+            leaderAllDTO.setIdCristiano(leaderAllModel.getIdCristiano());
+        }
         if(leaderAllDTO.getNombres() != null) {
             leaderAllDTO.setNombres(leaderAllModel.getNombres().trim());
         }
@@ -203,8 +209,14 @@ public class LeaderImpl implements LeaderService {
         if(leaderAllDTO.getAreaServicio() != null) {
             leaderAllDTO.setAreaServicio(leaderAllModel.getAreaServicio().trim());
         }
+        if(leaderAllDTO.getLiderServidor() != null) {
+            leaderAllDTO.setLiderServidor(leaderAllModel.getLiderServidor().trim());
+        }
         if(leaderAllDTO.getGrado() != null) {
             leaderAllDTO.setGrado(leaderAllModel.getGrado());
+        }
+        if(leaderAllDTO.getRol() != null) {
+            leaderAllDTO.setRol(leaderAllModel.getRol());
         }
         if(leaderAllDTO.getLiderCelular() != null) {
             leaderAllDTO.setLiderCelular(leaderAllModel.getLiderCelular().trim());

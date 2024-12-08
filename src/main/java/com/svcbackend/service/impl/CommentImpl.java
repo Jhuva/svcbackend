@@ -89,6 +89,52 @@ public class CommentImpl implements CommentService {
     }
 
     @Override
+    public GenericResponse<Object> findByIdCommentChristian(Integer idChristian) throws GenericException {
+        log.info("Obteniendo la lista de comentarios del cristiano...");
+        try {
+            List<CommentModel> listComment = commentMapper.findByIdCommentChristian(idChristian);
+            List<CommentDTO> listCommentDTO = new ArrayList<>();
+            if(listComment != null && !listComment.isEmpty()) {
+                listComment.forEach(comment -> {
+                    CommentDTO commentDTO = fixSpacesCampsComment(comment);
+                    listCommentDTO.add(commentDTO);
+                });
+                log.info("Lista de Comentarios obtenidos del cristiano");
+                return new GenericResponse<>(true, listCommentDTO, "Comentario del cristiano " + idChristian + " obtenido.");
+            } else {
+                log.info("No se cuenta con Comentarios del cristiano");
+                return new GenericResponse<>(false, "No se cuenta con el comentario del cristiano " + idChristian);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new GenericException("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public GenericResponse<Object> findByIdCommentLeader(Integer idLeader) throws GenericException {
+        log.info("Obteniendo la lista de comentarios del cristiano...");
+        try {
+            List<CommentModel> listComment = commentMapper.findByIdCommentLeader(idLeader);
+            List<CommentDTO> listCommentDTO = new ArrayList<>();
+            if(listComment != null && !listComment.isEmpty()) {
+                listComment.forEach(comment -> {
+                    CommentDTO commentDTO = fixSpacesCampsComment(comment);
+                    listCommentDTO.add(commentDTO);
+                });
+                log.info("Lista de Comentarios obtenidos del lider");
+                return new GenericResponse<>(true, listCommentDTO, "Comentario del lider " + idLeader + " obtenido.");
+            } else {
+                log.info("No se cuenta con Comentarios del lider");
+                return new GenericResponse<>(false, "No se cuenta con el comentario del lider " + idLeader);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new GenericException("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
     @Transactional
     public GenericResponse<Object> registerComment(CommentModel commentModel) {
         log.info("Registrando a un nuevo comentario {}... ", commentModel.getIdComentario());

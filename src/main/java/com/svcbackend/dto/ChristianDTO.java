@@ -22,4 +22,5 @@ public class ChristianDTO {
     private String procedencia;
     private String ocupacion;
     private String telefono;
+    private String membresia;
 }

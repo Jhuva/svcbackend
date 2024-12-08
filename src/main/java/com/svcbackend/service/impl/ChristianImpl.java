@@ -215,6 +215,9 @@ public class ChristianImpl implements ChristianService {
         if(christianDTO.getTelefono() != null) {
             christianDTO.setTelefono(christianModel.getTelefono().trim());
         }
+        if(christianDTO.getMembresia() != null) {
+            christianDTO.setMembresia(christianModel.getMembresia().trim());
+        }
         return christianDTO;
     }
 

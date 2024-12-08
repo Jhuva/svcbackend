@@ -18,6 +18,8 @@
     </resultMap>
 
     <resultMap id="CellAllMap" type="com.svcbackend.model.CellAllModel">
+        <result property="idCelula" column="idCelula"/>
+        <result property="idSupervision" column="idSupervision"/>
         <result property="numeroCelula" column="numero_celula"/>
         <result property="sectorMinisterio" column="sector_ministerio"/>
         <result property="miembros" column="miembros"/>
@@ -56,13 +58,13 @@
 
     <select id="findAllTableCell" resultMap="CellAllMap">
         SELECT
-            mc.numero_celula, msmz.nombre AS sector_ministerio,
+            mc.numero_celula, mc.idcelula, ms.idsupervision, msmz.nombre as sector_ministerio,
             (SELECT COUNT(*)
              FROM mae_cristiano c
-             WHERE rol = 'Miembro' AND c.idcelula = mc.idcelula ) AS miembros,
+             WHERE membresia = 'M' AND c.idcelula = mc.idcelula ) AS miembros,
             (SELECT COUNT(*)
              FROM mae_cristiano c
-             WHERE rol = 'Asistente' AND c.idcelula = mc.idcelula ) AS asistentes,
+             WHERE membresia = 'A' AND c.idcelula = mc.idcelula ) AS asistentes,
             (SELECT COUNT(*)
              FROM mae_cristiano c
              WHERE c.idcelula = mc.idcelula ) AS total,
@@ -85,19 +87,19 @@
             msmz.nombre as sector_ministerio,
             (SELECT COUNT(*)
              FROM mae_cristiano c
-             WHERE rol = 'Miembro' AND c.idcelula = mc.idcelula ) AS cant_miembros,
+             WHERE membresia = 'M' AND c.idcelula = mc.idcelula ) AS cant_miembros,
             (SELECT COUNT(*)
              FROM mae_cristiano c
-             WHERE rol = 'Asistente' AND c.idcelula = mc.idcelula ) AS cant_asistentes,
+             WHERE membresia = 'A' AND c.idcelula = mc.idcelula ) AS cant_asistentes,
             (SELECT COUNT(*)
              FROM mae_cristiano c
              WHERE c.idcelula = mc.idcelula ) AS total,
             (SELECT JSON_AGG(JSON_BUILD_OBJECT('idCristiano', c.idcristiano, 'nombres', c.nombres, 'apellidos', c.apellidos))
              FROM mae_cristiano c
-             where rol = 'Miembro' and c.idcelula = mc.idcelula) AS miembros,
+             where membresia = 'M' and c.idcelula = mc.idcelula) AS miembros,
             (SELECT JSON_AGG(JSON_BUILD_OBJECT('idCristiano', c.idcristiano, 'nombres', c.nombres, 'apellidos', c.apellidos))
              FROM mae_cristiano c
-             where rol = 'Asistente' and c.idcelula = mc.idcelula) as asistentes
+             where membresia = 'A' and c.idcelula = mc.idcelula) as asistentes
         FROM mae_celula mc
                  LEFT JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
                  LEFT JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio

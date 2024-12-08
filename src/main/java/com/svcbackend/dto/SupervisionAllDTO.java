@@ -4,8 +4,10 @@ import lombok.Data;
 
 @Data
 public class SupervisionAllDTO {
-    private String supervision;
-    private String supervisor;
+    private Integer idSectorMinisterio;
+    private Integer idSupervision;
+    private String nombreSupervision;
+    private String nombreSupervisor;
     private String sectMinisterio;
     private String nombreZona;
     private Integer cantCelulas;

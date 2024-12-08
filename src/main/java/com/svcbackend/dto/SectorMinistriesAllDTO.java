@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class SectorMinistriesAllDTO {
+    private Integer idZona;
+    private Integer idSectorMinisterio;
     private String nombre;
     private String nombreColPast;
     private String nombreZona;

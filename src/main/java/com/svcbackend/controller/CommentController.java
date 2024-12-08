@@ -31,6 +31,16 @@ public class CommentController {
         return commentService.findByIdComment(idComment);
     }
 
+    @GetMapping("/christian/{idChristian}")
+    public GenericResponse<Object> findByIdCommentChristian(@PathVariable("idChristian") Integer idChristian) throws GenericException {
+        return commentService.findByIdCommentChristian(idChristian);
+    }
+
+    @GetMapping("/leader/{idLeader}")
+    public GenericResponse<Object> findByIdCommentLeader(@PathVariable("idLeader") Integer idLeader) throws GenericException {
+        return commentService.findByIdCommentLeader(idLeader);
+    }
+
     @PostMapping("/register")
     public GenericResponse<Object> registerComment(@RequestBody CommentModel comment) throws GenericException {
         return commentService.registerComment(comment);

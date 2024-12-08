@@ -42,6 +42,19 @@
         SELECT * FROM mae_comentario WHERE idComentario = #{idComentario}
     </select>
 
+    <select id="findByIdCommentChristian" parameterType="int" resultMap="CommentMap">
+        SELECT * FROM mae_comentario WHERE idCristiano = #{idCristiano} ORDER BY idComentario DESC
+    </select>
+
+    <select id="findByIdCommentLeader" parameterType="int" resultMap="CommentMap">
+        SELECT
+            mc.idcomentario, mc.comentario, mc.idcristiano
+        FROM mae_comentario mc
+                 LEFT JOIN mae_cristiano mc2 ON mc.idcristiano = mc2.idcristiano
+                 LEFT JOIN mae_lider ml ON mc2.idcristiano = ml.idcristiano
+        WHERE ml.idlider = #{idLider};
+    </select>
+
     <insert id="registerComment" useGeneratedKeys="true" keyProperty="idComentario">
         INSERT INTO mae_comentario (idCristiano, comentario)
         VALUES (#{idCristiano}, #{comentario})

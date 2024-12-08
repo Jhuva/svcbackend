@@ -191,11 +191,17 @@ public class SupervisionImpl implements SupervisionService {
     private SupervisionAllDTO fixSpacesCampsTableSupervision(SupervisionAllModel supervisionAllModel) {
         SupervisionAllDTO supervisionAllDTO = new SupervisionAllDTO();
         BeanUtils.copyProperties(supervisionAllModel, supervisionAllDTO);
-        if(supervisionAllDTO.getSupervision() != null) {
-            supervisionAllDTO.setSupervision(supervisionAllModel.getSupervision().trim());
+        if(supervisionAllDTO.getIdSupervision() != null) {
+            supervisionAllDTO.setIdSupervision(supervisionAllModel.getIdSupervision());
         }
-        if(supervisionAllDTO.getSupervisor() != null) {
-            supervisionAllDTO.setSupervisor(supervisionAllModel.getSupervisor().trim());
+        if(supervisionAllDTO.getIdSectorMinisterio() != null) {
+            supervisionAllDTO.setIdSectorMinisterio(supervisionAllModel.getIdSectorMinisterio());
+        }
+        if(supervisionAllDTO.getNombreSupervision() != null) {
+            supervisionAllDTO.setNombreSupervision(supervisionAllModel.getNombreSupervision().trim());
+        }
+        if(supervisionAllDTO.getNombreSupervisor() != null) {
+            supervisionAllDTO.setNombreSupervisor(supervisionAllModel.getNombreSupervisor().trim());
         }
         if(supervisionAllDTO.getSectMinisterio() != null) {
             supervisionAllDTO.setSectMinisterio(supervisionAllModel.getSectMinisterio().trim());

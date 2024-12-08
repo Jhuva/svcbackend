@@ -191,6 +191,12 @@ public class CellImpl implements CellService {
     private CellAllDTO fixSpacesCampsTableCell(CellAllModel cellAllModel) {
         CellAllDTO cellAllDTO = new CellAllDTO();
         BeanUtils.copyProperties(cellAllModel, cellAllDTO);
+        if(cellAllDTO.getIdCelula() != null) {
+            cellAllDTO.setIdCelula(cellAllModel.getIdCelula());
+        }
+        if(cellAllDTO.getIdSupervision() != null) {
+            cellAllDTO.setIdSupervision(cellAllModel.getIdSupervision());
+        }
         if(cellAllDTO.getNumeroCelula() != null) {
             cellAllDTO.setNumeroCelula(cellAllModel.getNumeroCelula());
         }

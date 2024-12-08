@@ -8,13 +8,15 @@
     </resultMap>
 
     <resultMap id="SectorMinistriesMap" type="com.svcbackend.model.SectorMinistriesModel">
-        <id property="idSectorMinisterio" column="idSector_ministerio"/>
+        <id property="idSectorMinisterio" column="idsector_ministerio"/>
         <id property="idZona" column="idzona"/>
         <result property="nombre" column="nombre"/>
         <result property="nombreColPast" column="nombre_col_past"/>
     </resultMap>
 
     <resultMap id="SectorMinistriesAllMap" type="com.svcbackend.model.SectorMinistriesAllModel">
+        <result property="idZona" column="idZona"/>
+        <result property="idSectorMinisterio" column="idsector_ministerio"/>
         <result property="nombre" column="nombre"/>
         <result property="nombreColPast" column="nombre_col_past"/>
         <result property="nombreZona" column="nombre_zona"/>
@@ -51,7 +53,7 @@
 
     <select id="findAllTableSectorMinistries" resultMap="SectorMinistriesAllMap">
         SELECT
-            msmz.nombre, msmz.nombre_col_past, mz.nombre AS nombre_zona,
+            msmz.nombre, msmz.nombre_col_past, mz.nombre AS nombre_zona, msmz.idzona, msmz.idsector_ministerio,
             (SELECT COUNT(*)
              FROM mae_supervision ms
              WHERE ms.idsector_ministerio = msmz.idsector_ministerio ) AS cant_supervisiones,
@@ -63,12 +65,12 @@
              FROM mae_cristiano c
                       JOIN mae_celula mc ON c.idcelula = mc.idcelula
                       JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
-             WHERE rol = 'Miembro' AND ms.idsector_ministerio = msmz.idsector_ministerio ) AS miembros,
+             WHERE membresia = 'M' AND ms.idsector_ministerio = msmz.idsector_ministerio ) AS miembros,
             (SELECT COUNT(*)
              FROM mae_cristiano c
                       JOIN mae_celula mc ON c.idcelula = mc.idcelula
                       JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
-             WHERE rol = 'Asistente' AND ms.idsector_ministerio = msmz.idsector_ministerio ) AS asistentes,
+             WHERE membresia = 'A' AND ms.idsector_ministerio = msmz.idsector_ministerio ) AS asistentes,
             (SELECT COUNT(*)
              FROM mae_cristiano c
                       JOIN mae_celula mc ON c.idcelula = mc.idcelula
@@ -99,12 +101,12 @@
              FROM mae_cristiano c
                       JOIN mae_celula mc ON c.idcelula = mc.idcelula
                       JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
-             WHERE rol = 'Miembro' AND ms.idsector_ministerio = msmz.idsector_ministerio) AS miembros,
+             WHERE membresia = 'M' AND ms.idsector_ministerio = msmz.idsector_ministerio) AS miembros,
             (SELECT COUNT(*)
              FROM mae_cristiano c
                       JOIN mae_celula mc ON c.idcelula = mc.idcelula
                       JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
-             WHERE rol = 'Asistente' AND ms.idsector_ministerio = msmz.idsector_ministerio) AS asistentes,
+             WHERE membresia = 'A' AND ms.idsector_ministerio = msmz.idsector_ministerio) AS asistentes,
             (SELECT COUNT(*)
              FROM mae_cristiano c
                       JOIN mae_celula mc ON c.idcelula = mc.idcelula

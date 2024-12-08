@@ -192,6 +192,9 @@ public class ZoneImpl implements ZoneService {
     private ZoneAllDTO fixSpacesCampsTableZone(ZoneAllModel zoneAllModel) {
         ZoneAllDTO zoneAllDTO = new ZoneAllDTO();
         BeanUtils.copyProperties(zoneAllModel, zoneAllDTO);
+        if(zoneAllDTO.getIdZona() != null) {
+            zoneAllDTO.setIdZona(zoneAllModel.getIdZona());
+        }
         if(zoneAllDTO.getNombre() != null) {
             zoneAllDTO.setNombre(zoneAllModel.getNombre().trim());
         }

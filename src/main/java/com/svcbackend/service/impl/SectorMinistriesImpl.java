@@ -191,6 +191,12 @@ public class SectorMinistriesImpl implements SectorMinistriesService {
     private SectorMinistriesAllDTO fixSpacesCampsTableSectorMinistries(SectorMinistriesAllModel sectorMinistriesAllModel) {
         SectorMinistriesAllDTO sectorMinistriesAllDTO = new SectorMinistriesAllDTO();
         BeanUtils.copyProperties(sectorMinistriesAllModel, sectorMinistriesAllDTO);
+        if(sectorMinistriesAllDTO.getIdZona() != null) {
+            sectorMinistriesAllDTO.setIdZona(sectorMinistriesAllModel.getIdZona());
+        }
+        if(sectorMinistriesAllDTO.getIdSectorMinisterio() != null) {
+            sectorMinistriesAllDTO.setIdSectorMinisterio(sectorMinistriesAllModel.getIdSectorMinisterio());
+        }
         if(sectorMinistriesAllDTO.getNombre() != null) {
             sectorMinistriesAllDTO.setNombre(sectorMinistriesAllModel.getNombre().trim());
         }

@@ -23,4 +23,5 @@ public class ChristianModel {
     private String procedencia;
     private String ocupacion;
     private String telefono;
+    private String membresia;
 }

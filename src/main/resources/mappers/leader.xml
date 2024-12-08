@@ -22,11 +22,15 @@
     </resultMap>
 
     <resultMap id="LeaderAllMap" type="com.svcbackend.model.LeaderAllModel">
+        <result property="idLider" column="idLider"/>
+        <result property="idCristiano" column="idCristiano"/>
         <result property="nombres" column="nombres"/>
         <result property="apellidos" column="apellidos"/>
         <result property="estado" column="estado"/>
         <result property="areaServicio" column="area_servicio"/>
+        <result property="liderServidor" column="lider_servidor"/>
         <result property="grado" column="grado"/>
+        <result property="rol" column="rol"/>
         <result property="liderCelular" column="lider_celular"/>
         <result property="sectorMinisterio" column="sector_ministerio"/>
     </resultMap>
@@ -70,17 +74,18 @@
     </select>
 
     <select id="findAllLeader" resultMap="LeaderMap">
-        SELECT * FROM mae_lider ORDER BY idLider ASC
+        SELECT * FROM mae_lider ORDER BY idLider DESC
     </select>
 
     <select id="findAllTableLeader" resultMap="LeaderAllMap">
-        SELECT c.nombres, c.apellidos, l.estado, l.area_servicio, l.rol AS grado, l.lider_celular, msmz.nombre AS sector_ministerio
+        SELECT c.nombres, c.apellidos, l.estado, l.area_servicio, l.lider_celular, msmz.nombre AS sector_ministerio,
+               l.idlider, c.idcristiano, l.lider_servidor, l.rol, l.grado
         FROM mae_lider l
                  LEFT JOIN mae_cristiano c ON l.idcristiano = c.idcristiano
                  LEFT JOIN mae_celula mc ON c.idcelula = mc.idcelula
                  LEFT JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
                  LEFT JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
-        ORDER BY l.idlider ASC
+        ORDER BY l.idlider DESC
     </select>
 
     <select id="findByIdLeader" parameterType="int" resultMap="LeaderMap">
