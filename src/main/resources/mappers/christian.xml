@@ -73,7 +73,7 @@
 
     <select id="findByIdChristianDetail" parameterType="int" resultMap="ChristianDetailMap">
         SELECT c.nombres, c.apellidos, c.edad, c.fec_nacimiento, c.direccion, c.sexo, c.estado_civil, l.rol, c.procedencia,
-               c.ocupacion, c.grado_profesional, l.lider_celular, l.lider_servidor, l.area_servicio, c.estado,
+               c.ocupacion, c.grado_profesional, l.lider_celular, l.lider_servidor, l.area_servicio, c.estado, l.grado,
                mc.numero_celula, mc.nombre_lider, ms.nombre_supervision, ms.nombre_supervisor, msmz.nombre AS nombre_ministerio, msmz.nombre_col_past,
                mz.nombre AS nombre_zona, mz.nombre_ps_zonal,
                (SELECT COUNT(*)

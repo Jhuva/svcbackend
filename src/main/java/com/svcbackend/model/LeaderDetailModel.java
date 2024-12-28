@@ -22,6 +22,7 @@ public class LeaderDetailModel {
     private String liderServidor;
     private String areaServicio;
     private String estado;
+    private String grado;
     private String numeroCelula;
     private String nombreLider;
     private String nombreSupervision;

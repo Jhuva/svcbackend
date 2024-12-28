@@ -1,0 +1,126 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.svcbackend.mapper.DashboardMapper">
+
+    <resultMap id="DashboardNumberMap" type="com.svcbackend.model.DashNumbersModel">
+        <result property="totalMiembros" column="total_miembros"/>
+        <result property="totalLideres" column="total_lideres"/>
+        <result property="totalCelulas" column="total_celulas"/>
+    </resultMap>
+
+    <resultMap id="DashboardNumberDonutsMap" type="com.svcbackend.model.DashNumbersDonutsModel">
+        <result property="totalMiembros" column="total_miembros"/>
+        <result property="totalAsistentes" column="total_asistentes"/>
+        <result property="lideresA" column="lideres_a"/>
+        <result property="lideresB" column="lideres_b"/>
+    </resultMap>
+
+    <resultMap id="DashboardListZonesMap" type="com.svcbackend.model.DashListZonesModel">
+        <result property="idSectorMinisterio" column="idsector_ministerio"/>
+        <result property="nombre" column="nombre"/>
+    </resultMap>
+
+    <resultMap id="DashboardDetailZonesMap" type="com.svcbackend.model.DashDetailZonesModel">
+        <result property="nombreColPast" column="nombre_col_past"/>
+        <result property="nombre" column="nombre"/>
+        <result property="totMiembros" column="tot_miembros"/>
+        <result property="totalLideres" column="total_lideres"/>
+        <result property="totalCelulas" column="total_celulas"/>
+        <result property="lideresA" column="lideres_a"/>
+        <result property="lideresB" column="lideres_b"/>
+        <result property="miembros" column="miembros"/>
+        <result property="asistentes" column="asistentes"/>
+        <result property="lideresActivos" column="lideres_activos"/>
+        <result property="celulasActivas" column="celulas_activas"/>
+        <result property="celulasNoActivas" column="celulas_no_activas"/>
+    </resultMap>
+
+    <select id="findDashNumbers" resultMap="DashboardNumberMap">
+        SELECT
+                (SELECT COUNT(*) FROM mae_cristiano) AS total_miembros,
+                (SELECT COUNT(*) FROM mae_lider) AS total_lideres,
+                (SELECT COUNT(*) FROM mae_celula) AS total_celulas
+    </select>
+
+    <select id="findDashDonuts" resultMap="DashboardNumberDonutsMap">
+        SELECT
+            COUNT(CASE WHEN membresia = 'M' THEN 0 END) AS total_miembros,
+            COUNT(CASE WHEN membresia = 'A' THEN 0 END) AS total_asistentes,
+            (SELECT COUNT(*) FROM mae_lider WHERE grado = 'A') AS lideres_a,
+            (SELECT COUNT(*) FROM mae_lider WHERE grado = 'B') AS lideres_b
+        FROM mae_cristiano
+    </select>
+
+    <select id="findDashListZones" resultMap="DashboardListZonesMap">
+        SELECT
+            idsector_ministerio, nombre
+        FROM mae_sector_minis_zonal
+    </select>
+
+    <select id="findDashDetailZones" resultMap="DashboardDetailZonesMap">
+        SELECT
+            msmz.nombre_col_past, msmz.nombre,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+             WHERE (membresia = 'M' OR membresia = 'A') AND ms.idsector_ministerio = msmz.idsector_ministerio) AS tot_miembros,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                      JOIN mae_lider ml ON c.idcristiano = ml.idcristiano
+             WHERE (grado = 'A' OR grado = 'B') AND ms.idsector_ministerio = msmz.idsector_ministerio) AS total_lideres,
+            (SELECT COUNT(*)
+             FROM mae_celula mc
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+             WHERE ms.idsector_ministerio = msmz.idsector_ministerio) AS total_celulas,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                      JOIN mae_lider ml ON c.idcristiano = ml.idcristiano
+             WHERE grado = 'A' AND ms.idsector_ministerio = msmz.idsector_ministerio) AS lideres_a,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                      JOIN mae_lider ml ON c.idcristiano = ml.idcristiano
+             WHERE grado = 'B' AND ms.idsector_ministerio = msmz.idsector_ministerio) AS lideres_b,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+             WHERE membresia = 'M' AND ms.idsector_ministerio = msmz.idsector_ministerio) AS miembros,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+             WHERE membresia = 'A' AND ms.idsector_ministerio = msmz.idsector_ministerio) AS asistentes,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                      JOIN mae_lider ml ON c.idcristiano = ml.idcristiano
+             WHERE ml.estado = 'Activo' AND ms.idsector_ministerio = msmz.idsector_ministerio) AS lideres_activos,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                      JOIN mae_lider ml ON c.idcristiano = ml.idcristiano
+             WHERE ml.estado = 'No Activo' AND ms.idsector_ministerio = msmz.idsector_ministerio) AS lideres_no_activos,
+            (SELECT COUNT(*)
+             FROM mae_celula mc
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+             where mc.estado = 'Activo' AND ms.idsector_ministerio = msmz.idsector_ministerio) AS celulas_activas,
+            (SELECT COUNT(*)
+             FROM mae_celula mc
+                      JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+             WHERE mc.estado = 'No Activo' AND ms.idsector_ministerio = msmz.idsector_ministerio) AS celulas_no_activas
+        FROM mae_sector_minis_zonal msmz
+        WHERE idsector_ministerio = #{idSectorMinisterio}
+    </select>
+
+</mapper>

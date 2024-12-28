@@ -26,5 +26,6 @@
         <mapper resource="mappers/serviceArea.xml"/>
         <mapper resource="mappers/supervision.xml"/>
         <mapper resource="mappers/zone.xml"/>
+        <mapper resource="mappers/dashboard.xml"/>
     </mappers>
 </configuration>

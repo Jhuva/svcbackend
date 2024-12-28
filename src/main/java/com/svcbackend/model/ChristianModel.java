@@ -2,7 +2,7 @@ package com.svcbackend.model;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 
 @Data
@@ -13,7 +13,7 @@ public class ChristianModel {
     private String apellidos;
     private Integer edad;
     private String email;
-    private Date fecNacimiento;
+    private LocalDate fecNacimiento;
     private String sexo;
     private String estadoCivil;
     private String direccion;

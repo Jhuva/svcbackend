@@ -108,7 +108,7 @@
              FROM mae_cristiano c
                       JOIN mae_celula mc ON c.idcelula = mc.idcelula
              WHERE mc.idsupervision = ms.idsupervision ) AS total,
-            (SELECT JSON_AGG(JSON_BUILD_OBJECT('numero', mc.numero_celula, 'nombre_lider', mc.nombre_lider, 'direccion', mc.direccion, 'estado', mc.estado))
+            (SELECT JSON_AGG(JSON_BUILD_OBJECT('numero', mc.numero_celula, 'nombreLider', mc.nombre_lider, 'direccion', mc.direccion, 'estado', mc.estado, 'idCelula', mc.idCelula))
              FROM mae_celula mc
              WHERE mc.idsupervision = ms.idsupervision) AS plan_celulas,
             (SELECT JSON_AGG(JSON_BUILD_OBJECT(
@@ -118,7 +118,8 @@
                                 FROM mae_celula mc2
                                 WHERE mc2.nombre_lider = CONCAT(mc.nombres, ' ', mc.apellidos) AND mc2.idsupervision = ms.idsupervision),
                     'grado', ml.rol,
-                    'estado', ml.estado))
+                    'estado', ml.estado,
+                    'idLider', ml.idLider))
              FROM mae_lider ml
                       JOIN mae_cristiano mc ON ml.idcristiano = mc.idcristiano
                       JOIN mae_celula mc2 ON mc.idcelula = mc2.idcelula

@@ -25,7 +25,7 @@ public class SectorMinistriesImpl implements SectorMinistriesService {
 
     @Override
     public GenericResponse<Object> findAllMinistriesService() throws GenericException {
-        log.info("Obteniendo los Sectores o Ministerios...");
+        log.info("Obteniendo los Sub Zonas...");
         try {
             List<SectorMinistriesModel> listSectorMinistries = sectorMinistriesMapper.findAllSectorMinistries();
             List<SectorMinistriesDTO> listSectorMinistriesDTO = new ArrayList<>();
@@ -34,11 +34,11 @@ public class SectorMinistriesImpl implements SectorMinistriesService {
                     SectorMinistriesDTO sectorMinistriesDTO = fixSpacesCampsSectorMinistries(sectorMinistries);
                     listSectorMinistriesDTO.add(sectorMinistriesDTO);
                 });
-                log.info("Sectores o Ministerios obtenidos");
-                return new GenericResponse<>(true, listSectorMinistriesDTO, "Sectores o Ministerios obtenidos");
+                log.info("Sub Zonas obtenidos");
+                return new GenericResponse<>(true, listSectorMinistriesDTO, "Sub Zonas obtenidos");
             } else {
-                log.info("No se cuenta con Sectores o Ministerios");
-                return new GenericResponse<>(false, "No hay Sectores o Ministerios");
+                log.info("No se cuenta con Sub Zonas");
+                return new GenericResponse<>(false, "No hay Sub Zonas");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,7 +48,7 @@ public class SectorMinistriesImpl implements SectorMinistriesService {
 
     @Override
     public GenericResponse<Object> findAllTableSectorMinistries() throws GenericException {
-        log.info("Obteniendo la lista de sectores y ministerios...");
+        log.info("Obteniendo la lista de sub Zonas...");
         try {
             List<SectorMinistriesAllModel> listAllSectorMinistries = sectorMinistriesMapper.findAllTableSectorMinistries();
             List<SectorMinistriesAllDTO> listAllSectorMinistriesDTO = new ArrayList<>();
@@ -57,11 +57,11 @@ public class SectorMinistriesImpl implements SectorMinistriesService {
                     SectorMinistriesAllDTO sectorMinistriesAllDTO = fixSpacesCampsTableSectorMinistries(sectorMinistries);
                     listAllSectorMinistriesDTO.add(sectorMinistriesAllDTO);
                 });
-                log.info("Lista de Sectores y Ministerios obtenidos");
-                return new GenericResponse<>(true, listAllSectorMinistriesDTO, "Lista de Sectores y Ministerios obtenidos");
+                log.info("Lista de Sub Zonas obtenidos");
+                return new GenericResponse<>(true, listAllSectorMinistriesDTO, "Lista de Sub Zonas obtenidos");
             } else {
-                log.info("No se cuenta con Sectores y Ministerios");
-                return new GenericResponse<>(false, "No hay lista de Sectores y Ministerios");
+                log.info("No se cuenta con Sub Zonas");
+                return new GenericResponse<>(false, "No hay lista de Sub Zonas");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,15 +71,15 @@ public class SectorMinistriesImpl implements SectorMinistriesService {
 
     @Override
     public GenericResponse<Object> findSectorMinistriesNumbers() throws GenericException {
-        log.info("Obteniendo los numeros de sectores o ministerios");
+        log.info("Obteniendo los numeros de sub Zonas");
         try {
             SectorMinistriesNumModel sectorMinistriesRes = sectorMinistriesMapper.findSectorMinistriesNumbers();
             if(sectorMinistriesRes != null) {
-                log.info("Numeros de Sectores y Ministerios obtenidos");
-                return new GenericResponse<>(true, sectorMinistriesRes, "Números sectores o ministerios obtenidos");
+                log.info("Numeros de Sub Zonas obtenidos");
+                return new GenericResponse<>(true, sectorMinistriesRes, "Números sub Zonas obtenidos");
             } else {
-                log.info("No se cuenta con Números de Sectores o ministerios");
-                return new GenericResponse<>(false, "No hay números de Sectores y Ministerios");
+                log.info("No se cuenta con Números de Sub Zonas");
+                return new GenericResponse<>(false, "No hay números de Sub Zonas");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,16 +89,16 @@ public class SectorMinistriesImpl implements SectorMinistriesService {
 
     @Override
     public GenericResponse<Object> findByIdMinistriesService(Integer idSector_ministerio) throws GenericException {
-        log.info("Obteniendo Sectores o Ministerios {}...", idSector_ministerio);
+        log.info("Obteniendo Sub Zonas {}...", idSector_ministerio);
         try {
             SectorMinistriesModel sectorMinistriesRes = sectorMinistriesMapper.findByIdSectorMinistries(idSector_ministerio);
             if(sectorMinistriesRes != null) {
                 SectorMinistriesDTO sectorMinistriesDTO = fixSpacesCampsSectorMinistries(sectorMinistriesRes);
-                log.info("Sectores o Ministerios {}", idSector_ministerio);
-                return new GenericResponse<>(true, sectorMinistriesDTO, "Sectores o Ministerios " + idSector_ministerio + " obtenido.");
+                log.info("Sub Zonas {}", idSector_ministerio);
+                return new GenericResponse<>(true, sectorMinistriesDTO, "Sub Zonas " + idSector_ministerio + " obtenido.");
             } else {
-                log.info("No se cuenta con el siguiente Sectores o Ministerios {}", idSector_ministerio);
-                return new GenericResponse<>(false, "No se cuenta con el Sectores o Ministerios " + idSector_ministerio);
+                log.info("No se cuenta con el siguiente Sub Zonas {}", idSector_ministerio);
+                return new GenericResponse<>(false, "No se cuenta con el Sub Zonas " + idSector_ministerio);
             }
         } catch (Exception e) {
             throw new GenericException("Error: " + e.getMessage());
@@ -107,14 +107,14 @@ public class SectorMinistriesImpl implements SectorMinistriesService {
 
     @Override
     public GenericResponse<Object> findByIdSectorMinistriesDetail(Integer idSector_ministerio) throws GenericException {
-        log.info("Obteniendo el detalle de Sector o Ministerio {}...", idSector_ministerio);
+        log.info("Obteniendo el detalle de Sub Zona {}...", idSector_ministerio);
         try {
             SectorMinistriesDetailModel sectorMinistriesRes = sectorMinistriesMapper.findByIdSectorMinistriesDetail(idSector_ministerio);
             if(sectorMinistriesRes != null) {
-                log.info("Detalle del Sector o Ministerio {}", idSector_ministerio);
-                return new GenericResponse<>( true, sectorMinistriesRes, "Sector o Ministerio " + idSector_ministerio + " obtenido.");
+                log.info("Detalle del Sub Zona {}", idSector_ministerio);
+                return new GenericResponse<>( true, sectorMinistriesRes, "Sub Zona " + idSector_ministerio + " obtenido.");
             } else {
-                return new GenericResponse<>(false, "Sector o Ministerio no existe " + idSector_ministerio);
+                return new GenericResponse<>(false, "Sub Zona no existe " + idSector_ministerio);
             }
         } catch (Exception e) {
             throw new GenericException("Error: " + e.getMessage());
@@ -124,67 +124,67 @@ public class SectorMinistriesImpl implements SectorMinistriesService {
     @Override
     @Transactional
     public GenericResponse<Object> registerMinistriesService(SectorMinistriesModel sectorMinistriesModel) {
-        log.info("Registrando el Sector o Ministerio {}... ", sectorMinistriesModel.getIdSectorMinisterio());
+        log.info("Registrando el Sub Zona {}... ", sectorMinistriesModel.getIdSectorMinisterio());
         try {
             SectorMinistriesModel idSectorMinistries = sectorMinistriesMapper.findByIdSectorMinistries(sectorMinistriesModel.getIdSectorMinisterio());
             if(idSectorMinistries != null) {
-                log.error("Error al guardar el Sector o Ministerio. El Sector o Ministerio {} ya existe.", sectorMinistriesModel.getIdSectorMinisterio());
-                return new GenericResponse<>(false, "Error al guardar el Sector o Ministerio " + sectorMinistriesModel.getNombre() + " ya existe.");
+                log.error("Error al guardar el Sub Zona. El Sector o Ministerio {} ya existe.", sectorMinistriesModel.getIdSectorMinisterio());
+                return new GenericResponse<>(false, "Error al guardar el Sub Zona " + sectorMinistriesModel.getNombre() + " ya existe.");
             } else {
-                log.info("Se ha registrado el Sector o Ministerio {}.", sectorMinistriesModel.getIdSectorMinisterio());
+                log.info("Se ha registrado el Sub Zona {}.", sectorMinistriesModel.getIdSectorMinisterio());
                 sectorMinistriesMapper.registerSectorMinistries(sectorMinistriesModel);
-                return new GenericResponse<>(true, "Se ha registrado el Sector o Ministerio " + sectorMinistriesModel.getNombre());
+                return new GenericResponse<>(true, "Se ha registrado el Sub Zona " + sectorMinistriesModel.getNombre());
             }
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             e.printStackTrace();
-            return new GenericResponse<>(false, "Error al momento de registrar el Sector o Ministerio " + sectorMinistriesModel.getNombre());
+            return new GenericResponse<>(false, "Error al momento de registrar el Sub Zona " + sectorMinistriesModel.getNombre());
         }
     }
 
     @Override
     @Transactional
     public GenericResponse<Object> updateMinistriesService(SectorMinistriesModel sectorMinistriesModel) {
-        log.info("Actualizando el Sector o Ministerio {}... ", sectorMinistriesModel.getIdSectorMinisterio());
+        log.info("Actualizando el Sub Zona {}... ", sectorMinistriesModel.getIdSectorMinisterio());
         try {
             if(sectorMinistriesModel.getIdSectorMinisterio() != null) {
                 SectorMinistriesModel idSectorMinistries = sectorMinistriesMapper.findByIdSectorMinistries(sectorMinistriesModel.getIdSectorMinisterio());
                 if(idSectorMinistries != null) {
                     sectorMinistriesMapper.updateSectorMinistries(sectorMinistriesModel);
-                    return new GenericResponse<>(true, "Sector o Ministerio " + sectorMinistriesModel.getNombre() + " actualizado.");
+                    return new GenericResponse<>(true, "Sub Zona " + sectorMinistriesModel.getNombre() + " actualizado.");
                 } else {
-                    log.info("Error al momento de actualizar el Sector o Ministerio {}. No existe", sectorMinistriesModel.getIdSectorMinisterio());
-                    return new GenericResponse<>(false, "Error al momento de actualizar el Sector o Ministerio " + sectorMinistriesModel.getNombre() + " no existe");
+                    log.info("Error al momento de actualizar el Sub Zona {}. No existe", sectorMinistriesModel.getIdSectorMinisterio());
+                    return new GenericResponse<>(false, "Error al momento de actualizar el Sub Zona " + sectorMinistriesModel.getNombre() + " no existe");
                 }
             } else {
-                log.error("Error al momento de actualizar. El Sector o Ministerio no debe ser nulo");
-                return new GenericResponse<>(false, "Id del Sector o Ministerio es nulo");
+                log.error("Error al momento de actualizar. El Sub Zona no debe ser nulo");
+                return new GenericResponse<>(false, "Id del Sub Zona es nulo");
             }
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             e.printStackTrace();
-            return new GenericResponse<>(false, "Error al momento de actualizar el Sector o Ministerio " + sectorMinistriesModel.getNombre());
+            return new GenericResponse<>(false, "Error al momento de actualizar el Sub Zona " + sectorMinistriesModel.getNombre());
         }
     }
 
     @Override
     @Transactional
     public GenericResponse<Object> deleteMinistriesService(Integer idSector_ministerio) {
-        log.info("Eliminando Sectores o Ministerios {}...", idSector_ministerio);
+        log.info("Eliminando Sub Zona {}...", idSector_ministerio);
         try {
             SectorMinistriesModel sectorMinistriesRes = sectorMinistriesMapper.findByIdSectorMinistries(idSector_ministerio);
             if(sectorMinistriesRes.getIdSectorMinisterio() != null) {
                 sectorMinistriesMapper.deleteSectorMinistries(idSector_ministerio);
-                log.info("Sectores o Ministerios eliminado {}", idSector_ministerio);
-                return new GenericResponse<>(true, "Sectores o Ministerios " + sectorMinistriesRes.getNombre() + " eliminado.");
+                log.info("Sub Zona eliminado {}", idSector_ministerio);
+                return new GenericResponse<>(true, "Sub Zona " + sectorMinistriesRes.getNombre() + " eliminado.");
             } else {
-                log.info("No se cuenta con el siguiente Sectores o Ministerios {}", idSector_ministerio);
-                return new GenericResponse<>(false, "No se cuenta con el Sectores o Ministerios " + sectorMinistriesRes.getNombre());
+                log.info("No se cuenta con el siguiente Sub Zona {}", idSector_ministerio);
+                return new GenericResponse<>(false, "No se cuenta con el Sub Zona " + sectorMinistriesRes.getNombre());
             }
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             e.printStackTrace();
-            return new GenericResponse<>(false, "Error al momento de eliminar el Sectores o Ministerios " + idSector_ministerio);
+            return new GenericResponse<>(false, "Error al momento de eliminar el Sub Zona " + idSector_ministerio);
         }
     }
 

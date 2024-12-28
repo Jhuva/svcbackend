@@ -125,6 +125,7 @@
                       JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
              WHERE ms.idsector_ministerio = msmz.idsector_ministerio) AS total,
             (SELECT JSON_AGG(JSON_BUILD_OBJECT(
+                    'idSupervision', ms.idSupervision,
                     'nombre', ms.nombre_supervision,
                     'supervisor', ms.nombre_supervisor,
                     'celulas', (SELECT COUNT(*)
@@ -137,14 +138,16 @@
              FROM mae_supervision ms
              WHERE ms.idsector_ministerio = msmz.idsector_ministerio) AS plan_supervisiones,
             (SELECT JSON_AGG(JSON_BUILD_OBJECT(
+                    'idCelula', mc.idCelula,
                     'numero', mc.numero_celula,
-                    'nombre_lider', mc.nombre_lider,
+                    'nombreLider', mc.nombre_lider,
                     'direccion', mc.direccion,
                     'estado', mc.estado))
              FROM mae_celula mc
                       JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
              WHERE ms.idsector_ministerio = msmz.idsector_ministerio) AS plan_celulas,
             (SELECT JSON_AGG(JSON_BUILD_OBJECT(
+                    'idLider', ml.idLider,
                     'nombres', mc.nombres,
                     'apellidos', mc.apellidos,
                     'celulas', (SELECT COUNT(*)

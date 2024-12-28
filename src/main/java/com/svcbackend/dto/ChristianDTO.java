@@ -2,7 +2,7 @@ package com.svcbackend.dto;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 public class ChristianDTO {
@@ -12,7 +12,7 @@ public class ChristianDTO {
     private String apellidos;
     private Integer edad;
     private String email;
-    private Date fecNacimiento;
+    private LocalDate fecNacimiento;
     private String sexo;
     private String estadoCivil;
     private String direccion;
