@@ -27,5 +27,6 @@
         <mapper resource="mappers/supervision.xml"/>
         <mapper resource="mappers/zone.xml"/>
         <mapper resource="mappers/dashboard.xml"/>
+        <mapper resource="mappers/user.xml"/>
     </mappers>
 </configuration>
