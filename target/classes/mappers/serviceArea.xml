@@ -1,0 +1,33 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.svcbackend.mapper.ServiceAreaMapper">
+
+    <resultMap id="ServiceAreaMap" type="com.svcbackend.model.ServiceAreaModel">
+        <id property="idAreaServicio" column="idArea_servicio"/>
+        <result property="areaServicio" column="area_servicio"/>
+    </resultMap>
+
+    <select id="findAllServiceArea" resultMap="ServiceAreaMap">
+        SELECT * FROM area_servicio ORDER BY idArea_servicio ASC
+    </select>
+
+    <select id="findByIdServiceArea" parameterType="int" resultMap="ServiceAreaMap">
+        SELECT * FROM area_servicio WHERE idArea_servicio = #{idAreaServicio}
+    </select>
+
+    <insert id="registerServiceArea" useGeneratedKeys="true" keyProperty="idAreaServicio">
+        INSERT INTO area_servicio (area_servicio) VALUES (#{areaServicio})
+    </insert>
+
+    <update id="updateServiceArea">
+        UPDATE area_servicio
+        SET area_servicio = #{areaServicio}
+        WHERE idArea_servicio = #{idAreaServicio}
+    </update>
+
+    <delete id="deleteServiceArea"  parameterType="int">
+        DELETE FROM area_servicio WHERE idArea_servicio = #{idAreaServicio}
+    </delete>
+
+</mapper>

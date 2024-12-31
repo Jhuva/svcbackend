@@ -1,0 +1,33 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.svcbackend.mapper.RolMapper">
+
+    <resultMap id="RolMap" type="com.svcbackend.model.RolModel">
+        <id property="idRol" column="idRol"/>
+        <result property="rol" column="rol"/>
+    </resultMap>
+
+    <select id="findAllRol" resultMap="RolMap">
+        SELECT * FROM rol ORDER BY idRol ASC
+    </select>
+
+    <select id="findByIdRol" parameterType="int" resultMap="RolMap">
+        SELECT * FROM rol WHERE idRol = #{idRol}
+    </select>
+
+    <insert id="registerRol" useGeneratedKeys="true" keyProperty="idRol">
+        INSERT INTO rol (rol) VALUES (#{rol})
+    </insert>
+
+    <update id="updateRol">
+        UPDATE rol
+        SET rol = #{rol}
+        WHERE idRol = #{idRol}
+    </update>
+
+    <delete id="deleteRol"  parameterType="int">
+        DELETE FROM rol WHERE idRol = #{idRol}
+    </delete>
+
+</mapper>

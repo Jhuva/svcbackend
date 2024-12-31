@@ -1,0 +1,150 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.svcbackend.mapper.SupervisionMapper">
+
+    <resultMap id="SupervisionNumberMap" type="com.svcbackend.model.SupervisionNumModel">
+        <result property="total" column="total"/>
+    </resultMap>
+
+    <resultMap id="SupervisionMap" type="com.svcbackend.model.SupervisionModel">
+        <id property="idSupervision" column="idSupervision"/>
+        <id property="idSectorMinisterio" column="idSector_ministerio"/>
+        <result property="nombreSupervision" column="nombre_supervision"/>
+        <result property="nombreSupervisor" column="nombre_supervisor"/>
+    </resultMap>
+
+    <resultMap id="SupervisionAllMap" type="com.svcbackend.model.SupervisionAllModel">
+        <result property="idSectorMinisterio" column="idSector_ministerio"/>
+        <result property="idSupervision" column="idSupervision"/>
+        <result property="supervision" column="supervision"/>
+        <result property="supervisor" column="supervisor"/>
+        <result property="sectMinisterio" column="sect_ministerio"/>
+        <result property="nombreZona" column="nombre_zona"/>
+        <result property="cantCelulas" column="cant_celulas"/>
+        <result property="miembros" column="miembros"/>
+        <result property="asistentes" column="asistentes"/>
+        <result property="total" column="total"/>
+    </resultMap>
+
+    <resultMap id="SupervisionDetailMap" type="com.svcbackend.model.SupervisionDetailModel">
+        <result property="supervision" column="supervision"/>
+        <result property="supervisor" column="supervisor"/>
+        <result property="sectMinisterio" column="sect_ministerio"/>
+        <result property="nombreZona" column="nombre_zona"/>
+        <result property="cantCelulas" column="cant_celulas"/>
+        <result property="miembros" column="miembros"/>
+        <result property="asistentes" column="asistentes"/>
+        <result property="liderA" column="lider_a"/>
+        <result property="liderB" column="lider_b"/>
+        <result property="total" column="total"/>
+        <result property="planCelulas" column="plan_celulas" typeHandler="com.svcbackend.service.impl.JsonTypeHandler"/>
+        <result property="planLideres" column="plan_lideres" typeHandler="com.svcbackend.service.impl.JsonTypeHandler"/>
+    </resultMap>
+
+    <select id="findSupervisionNumbers" resultMap="SupervisionNumberMap">
+        SELECT COUNT(*) AS total FROM mae_supervision;
+    </select>
+
+    <select id="findAllSupervision" resultMap="SupervisionMap">
+        SELECT * FROM mae_supervision ORDER BY idSupervision ASC
+    </select>
+
+    <select id="findAllTableSupervision" resultMap="SupervisionAllMap">
+        SELECT
+            ms.nombre_supervision, ms.nombre_supervisor,
+            msmz.nombre AS sect_ministerio, mz.nombre AS nombre_zona, msmz.idsector_ministerio, ms.idsupervision,
+            (SELECT COUNT(*)
+             FROM mae_celula mc
+             WHERE mc.idsupervision = ms.idsupervision ) AS cant_celulas,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+             WHERE membresia = 'M' and mc.idsupervision = ms.idsupervision ) AS miembros,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+             WHERE membresia = 'A' and mc.idsupervision = ms.idsupervision ) AS asistentes,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+             WHERE mc.idsupervision = ms.idsupervision ) AS total
+        FROM mae_supervision ms
+                 LEFT JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+                 LEFT JOIN mae_zona mz ON msmz.idzona = mz.idzona
+        ORDER BY ms.idsupervision DESC
+    </select>
+
+    <select id="findByIdSupervision" parameterType="int" resultMap="SupervisionMap">
+        SELECT * FROM mae_supervision WHERE idSupervision = #{idSupervision}
+    </select>
+
+    <select id="findByIdSupervisionDetail" parameterType="int" resultMap="SupervisionDetailMap">
+        SELECT
+            ms.nombre_supervision AS supervision, ms.nombre_supervisor AS supervisor,
+            msmz.nombre AS sect_ministerio, mz.nombre AS nombre_zona,
+            (SELECT COUNT(*)
+             FROM mae_celula mc
+             WHERE mc.idsupervision = ms.idsupervision ) AS cant_celulas,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+             WHERE membresia = 'M' AND mc.idsupervision = ms.idsupervision ) AS miembros,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+             WHERE membresia = 'A' AND mc.idsupervision = ms.idsupervision ) AS asistentes,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                      JOIN mae_lider ml ON c.idcristiano = ml.idcristiano
+             WHERE grado = 'A' AND mc.idsupervision = ms.idsupervision ) AS lider_a,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                      JOIN mae_lider ml ON c.idcristiano = ml.idcristiano
+             WHERE grado = 'B' AND mc.idsupervision = ms.idsupervision ) AS lider_b,
+            (SELECT COUNT(*)
+             FROM mae_cristiano c
+                      JOIN mae_celula mc ON c.idcelula = mc.idcelula
+             WHERE mc.idsupervision = ms.idsupervision ) AS total,
+            (SELECT JSON_AGG(JSON_BUILD_OBJECT('numero', mc.numero_celula, 'nombreLider', mc.nombre_lider, 'direccion', mc.direccion, 'estado', mc.estado, 'idCelula', mc.idCelula))
+             FROM mae_celula mc
+             WHERE mc.idsupervision = ms.idsupervision) AS plan_celulas,
+            (SELECT JSON_AGG(JSON_BUILD_OBJECT(
+                    'nombres', mc.nombres,
+                    'apellidos', mc.apellidos,
+                    'celulas', (SELECT COUNT(*)
+                                FROM mae_celula mc2
+                                WHERE mc2.nombre_lider = CONCAT(mc.nombres, ' ', mc.apellidos) AND mc2.idsupervision = ms.idsupervision),
+                    'grado', ml.rol,
+                    'estado', ml.estado,
+                    'idLider', ml.idLider))
+             FROM mae_lider ml
+                      JOIN mae_cristiano mc ON ml.idcristiano = mc.idcristiano
+                      JOIN mae_celula mc2 ON mc.idcelula = mc2.idcelula
+             WHERE mc2.idsupervision = ms.idsupervision) AS plan_lideres
+        FROM mae_supervision ms
+                 LEFT JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+                 LEFT JOIN mae_zona mz ON msmz.idzona = mz.idzona
+        WHERE ms.idsupervision = #{idSupervision}
+    </select>
+
+    <insert id="registerSupervision" useGeneratedKeys="true" keyProperty="idSectorMinisterio">
+        INSERT INTO mae_supervision (idSector_ministerio, nombre_supervision, nombre_supervisor)
+        VALUES (#{idSectorMinisterio}, #{nombreSupervision}, #{nombreSupervisor})
+    </insert>
+
+    <update id="updateSupervision">
+        UPDATE mae_supervision
+        SET idSector_ministerio = #{idSectorMinisterio},
+            nombre_supervision = #{nombreSupervision},
+            nombre_supervisor = #{nombreSupervisor}
+        WHERE idSupervision = #{idSupervision}
+    </update>
+
+    <delete id="deleteSupervision"  parameterType="int">
+        DELETE FROM mae_supervision WHERE idSupervision = #{idSupervision}
+    </delete>
+
+</mapper>

@@ -1,0 +1,33 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.svcbackend.mapper.LeaderStateMapper">
+
+    <resultMap id="LeaderStateMap" type="com.svcbackend.model.LeaderStateModel">
+        <id property="idEstadoLider" column="idEstado_lider"/>
+        <result property="estadoLider" column="estado_lider"/>
+    </resultMap>
+
+    <select id="findAllLeaderState" resultMap="LeaderStateMap">
+        SELECT * FROM estado_lider ORDER BY idEstado_lider ASC
+    </select>
+
+    <select id="findByIdLeaderState" parameterType="int" resultMap="LeaderStateMap">
+        SELECT * FROM estado_lider WHERE idEstado_lider = #{idEstadoLider}
+    </select>
+
+    <insert id="registerLeaderState" useGeneratedKeys="true" keyProperty="idEstadoLider">
+        INSERT INTO estado_lider (estado_lider) VALUES (#{estadoLider})
+    </insert>
+
+    <update id="updateLeaderState">
+        UPDATE estado_lider
+        SET estado_lider = #{estadoLider}
+        WHERE idEstado_lider = #{idEstadoLider}
+    </update>
+
+    <delete id="deleteLeaderState"  parameterType="int">
+        DELETE FROM estado_lider WHERE idEstado_lider = #{idEstadoLider}
+    </delete>
+
+</mapper>

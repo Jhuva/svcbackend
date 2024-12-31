@@ -1,0 +1,124 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.svcbackend.mapper.ChristianMapper">
+
+    <resultMap id="ChristianNumberMap" type="com.svcbackend.model.ChristianNumModel">
+        <result property="totalMiembros" column="total_miembros"/>
+        <result property="totalAsistentes" column="total_asistentes"/>
+    </resultMap>
+
+    <resultMap id="ChristianMap" type="com.svcbackend.model.ChristianModel">
+        <id property="idCristiano" column="idCristiano"/>
+        <id property="idCelula" column="idCelula"/>
+        <result property="nombres" column="nombres"/>
+        <result property="apellidos" column="apellidos"/>
+        <result property="edad" column="edad"/>
+        <result property="direccion" column="direccion"/>
+        <result property="email" column="email"/>
+        <result property="fecNacimiento" column="fec_nacimiento"/>
+        <result property="sexo" column="sexo"/>
+        <result property="estadoCivil" column="estado_civil"/>
+        <result property="gradoProfesional" column="grado_profesional"/>
+        <result property="estado" column="estado"/>
+        <result property="rol" column="rol"/>
+        <result property="procedencia" column="procedencia"/>
+        <result property="ocupacion" column="ocupacion"/>
+        <result property="telefono" column="telefono"/>
+        <result property="membresia" column="membresia"/>
+    </resultMap>
+
+    <resultMap id="ChristianDetailMap" type="com.svcbackend.model.ChristianDetailModel">
+        <result property="nombres" column="nombres"/>
+        <result property="apellidos" column="apellidos"/>
+        <result property="edad" column="edad"/>
+        <result property="fecNacimiento" column="fec_nacimiento"/>
+        <result property="direccion" column="direccion"/>
+        <result property="sexo" column="sexo"/>
+        <result property="estadoCivil" column="estado_civil"/>
+        <result property="rol" column="rol"/>
+        <result property="procedencia" column="procedencia"/>
+        <result property="ocupacion" column="ocupacion"/>
+        <result property="gradoProfesional" column="grado_profesional"/>
+        <result property="liderCelular" column="lider_celular"/>
+        <result property="liderServidor" column="lider_servidor"/>
+        <result property="areaServicio" column="area_servicio"/>
+        <result property="estado" column="estado"/>
+        <result property="numeroCelula" column="numero_celula"/>
+        <result property="nombreLider" column="nombre_lider"/>
+        <result property="nombreSupervision" column="nombre_supervision"/>
+        <result property="nombreSupervisor" column="nombre_supervisor"/>
+        <result property="nombreMinisterio" column="nombre_ministerio"/>
+        <result property="nombreColPast" column="nombre_col_past"/>
+        <result property="nombreZona" column="nombre_zona"/>
+        <result property="nombrePsZonal" column="nombre_ps_zonal"/>
+        <result property="cantidadCelulas" column="cantidad_celulas"/>
+        <result property="comentarios" column="comentarios" typeHandler="com.svcbackend.service.impl.ArrayToListTypeHandler"/>
+    </resultMap>
+
+    <select id="findChristianNumbers" resultMap="ChristianNumberMap">
+        SELECT
+            COUNT(CASE WHEN membresia = 'M' THEN 0 END) AS total_miembros,
+            COUNT(CASE WHEN membresia = 'A' THEN 0 END) AS total_asistentes
+        FROM mae_cristiano
+    </select>
+
+    <select id="findAllChristian" resultMap="ChristianMap">
+        SELECT * FROM mae_cristiano ORDER BY idCristiano DESC
+    </select>
+
+    <select id="findByIdChristian" parameterType="int" resultMap="ChristianMap">
+        SELECT * FROM mae_cristiano WHERE idCristiano = #{idCristiano}
+    </select>
+
+    <select id="findByIdChristianDetail" parameterType="int" resultMap="ChristianDetailMap">
+        SELECT c.nombres, c.apellidos, c.edad, c.fec_nacimiento, c.direccion, c.sexo, c.estado_civil, l.rol, c.procedencia,
+               c.ocupacion, c.grado_profesional, l.lider_celular, l.lider_servidor, l.area_servicio, c.estado, l.grado,
+               mc.numero_celula, mc.nombre_lider, ms.nombre_supervision, ms.nombre_supervisor, msmz.nombre AS nombre_ministerio, msmz.nombre_col_past,
+               mz.nombre AS nombre_zona, mz.nombre_ps_zonal,
+               (SELECT COUNT(*)
+                FROM mae_celula
+                WHERE idlider = l.idcristiano) AS cantidad_celulas,
+               (SELECT ARRAY_AGG(comentario)
+                FROM mae_comentario
+                WHERE idcristiano = c.idcristiano) AS comentarios
+        FROM mae_cristiano c
+                 LEFT JOIN mae_lider l ON c.idcristiano = l.idcristiano
+                 LEFT JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                 LEFT JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                 LEFT JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+                 LEFT JOIN mae_zona mz ON msmz.idzona = mz.idzona
+        WHERE c.idcristiano = #{idCristiano}
+    </select>
+
+    <insert id="registerChristian" useGeneratedKeys="true" keyProperty="idCristiano">
+        INSERT INTO mae_cristiano (idCelula, nombres, apellidos, edad, direccion, email, fec_nacimiento, sexo, estado_civil, grado_profesional, estado, rol, procedencia, ocupacion, telefono, membresia)
+        VALUES (#{idCelula}, #{nombres}, #{apellidos}, #{edad}, #{direccion}, #{email}, #{fecNacimiento}, #{sexo}, #{estadoCivil}, #{gradoProfesional}, #{estado},#{rol} ,#{procedencia}, #{ocupacion}, #{telefono}, #{membresia})
+    </insert>
+
+    <update id="updateChristian">
+        UPDATE mae_cristiano
+        SET idCelula = #{idCelula},
+            nombres = #{nombres},
+            apellidos = #{apellidos},
+            edad = #{edad},
+            direccion = #{direccion},
+            email = #{email},
+            fec_nacimiento = #{fecNacimiento},
+            sexo = #{sexo},
+            estado_civil = #{estadoCivil},
+            grado_profesional = #{gradoProfesional},
+            estado = #{estado},
+            rol = #{rol},
+            procedencia = #{procedencia},
+            ocupacion = #{ocupacion},
+            telefono = #{telefono},
+            membresia = #{membresia}
+        WHERE idCristiano = #{idCristiano}
+    </update>
+
+    <delete id="deleteChristian"  parameterType="int">
+        DELETE FROM mae_cristiano WHERE idCristiano = #{idCristiano}
+    </delete>
+
+</mapper>

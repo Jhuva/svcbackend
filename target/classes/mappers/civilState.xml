@@ -1,0 +1,33 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.svcbackend.mapper.CivilStateMapper">
+
+    <resultMap id="CivilStateMap" type="com.svcbackend.model.CivilStateModel">
+        <id property="idEstadoCivil" column="idEstado_civil"/>
+        <result property="estadoCivil" column="estado_civil"/>
+    </resultMap>
+
+    <select id="findAllCivilState" resultMap="CivilStateMap">
+        SELECT * FROM estado_civil ORDER BY idEstado_civil ASC
+    </select>
+
+    <select id="findByIdCivilState" parameterType="int" resultMap="CivilStateMap">
+        SELECT * FROM estado_civil WHERE idEstado_civil = #{idEstadoCivil}
+    </select>
+
+    <insert id="registerCivilState" useGeneratedKeys="true" keyProperty="idEstadoCivil">
+        INSERT INTO estado_civil (estado_civil) VALUES (#{estadoCivil})
+    </insert>
+
+    <update id="updateCivilState">
+        UPDATE estado_civil
+        SET estado_civil = #{estadoCivil}
+        WHERE idEstado_civil = #{idEstadoCivil}
+    </update>
+
+    <delete id="deleteCivilState"  parameterType="int">
+        DELETE FROM estado_civil WHERE idEstado_civil = #{idEstadoCivil}
+    </delete>
+
+</mapper>

@@ -1,0 +1,136 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.svcbackend.mapper.LeaderMapper">
+
+    <resultMap id="LeaderNumberMap" type="com.svcbackend.model.LeaderNumModel">
+        <result property="lideresA" column="lideres_a"/>
+        <result property="lideresB" column="lideres_b"/>
+        <result property="lideresActivos" column="lideres_activos"/>
+        <result property="lideresNoActivos" column="lideres_no_activos"/>
+    </resultMap>
+
+    <resultMap id="LeaderMap" type="com.svcbackend.model.LeaderModel">
+        <id property="idLider" column="idLider"/>
+        <id property="idCristiano" column="idCristiano"/>
+        <result property="grado" column="grado"/>
+        <result property="liderServidor" column="lider_servidor"/>
+        <result property="areaServicio" column="area_servicio"/>
+        <result property="estado" column="estado"/>
+        <result property="liderCelular" column="lider_celular"/>
+        <result property="rol" column="rol"/>
+    </resultMap>
+
+    <resultMap id="LeaderAllMap" type="com.svcbackend.model.LeaderAllModel">
+        <result property="idLider" column="idLider"/>
+        <result property="idCristiano" column="idCristiano"/>
+        <result property="nombres" column="nombres"/>
+        <result property="apellidos" column="apellidos"/>
+        <result property="estado" column="estado"/>
+        <result property="areaServicio" column="area_servicio"/>
+        <result property="liderServidor" column="lider_servidor"/>
+        <result property="grado" column="grado"/>
+        <result property="rol" column="rol"/>
+        <result property="liderCelular" column="lider_celular"/>
+        <result property="sectorMinisterio" column="sector_ministerio"/>
+    </resultMap>
+
+    <resultMap id="LeaderDetailMap" type="com.svcbackend.model.LeaderDetailModel">
+        <result property="nombres" column="nombres"/>
+        <result property="apellidos" column="apellidos"/>
+        <result property="edad" column="edad"/>
+        <result property="fecNacimiento" column="fec_nacimiento"/>
+        <result property="direccion" column="direccion"/>
+        <result property="sexo" column="sexo"/>
+        <result property="estadoCivil" column="estado_civil"/>
+        <result property="rol" column="rol"/>
+        <result property="procedencia" column="procedencia"/>
+        <result property="ocupacion" column="ocupacion"/>
+        <result property="gradoProfesional" column="grado_profesional"/>
+        <result property="liderCelular" column="lider_celular"/>
+        <result property="liderServidor" column="lider_servidor"/>
+        <result property="areaServicio" column="area_servicio"/>
+        <result property="estado" column="estado"/>
+        <result property="numeroCelula" column="numero_celula"/>
+        <result property="nombreLider" column="nombre_lider"/>
+        <result property="nombreSupervision" column="nombre_supervision"/>
+        <result property="nombreSupervisor" column="nombre_supervisor"/>
+        <result property="nombreMinisterio" column="nombre_ministerio"/>
+        <result property="nombreColPast" column="nombre_col_past"/>
+        <result property="nombreZona" column="nombre_zona"/>
+        <result property="nombrePsZonal" column="nombre_ps_zonal"/>
+        <result property="cantidadCelulas" column="cantidad_celulas"/>
+        <result property="comentarios" column="comentarios" typeHandler="com.svcbackend.service.impl.ArrayToListTypeHandler"/>
+    </resultMap>
+
+
+    <select id="findLeaderNumbers" resultMap="LeaderNumberMap">
+        SELECT
+            COUNT(CASE WHEN grado = 'A' THEN 0 END) AS lideres_a,
+            COUNT(CASE WHEN grado = 'B' THEN 0 END) AS lideres_b,
+            COUNT(CASE WHEN estado = 'Activo' THEN 0 END) AS lideres_activos,
+            COUNT(CASE WHEN estado = 'No Activo' THEN 0 END) AS lideres_no_activos
+        FROM mae_lider;
+    </select>
+
+    <select id="findAllLeader" resultMap="LeaderMap">
+        SELECT * FROM mae_lider ORDER BY idLider DESC
+    </select>
+
+    <select id="findAllTableLeader" resultMap="LeaderAllMap">
+        SELECT c.nombres, c.apellidos, l.estado, l.area_servicio, l.lider_celular, msmz.nombre AS sector_ministerio,
+               l.idlider, c.idcristiano, l.lider_servidor, l.rol, l.grado
+        FROM mae_lider l
+                 LEFT JOIN mae_cristiano c ON l.idcristiano = c.idcristiano
+                 LEFT JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                 LEFT JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                 LEFT JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+        ORDER BY l.idlider DESC
+    </select>
+
+    <select id="findByIdLeader" parameterType="int" resultMap="LeaderMap">
+        SELECT * FROM mae_lider WHERE idLider = #{idLider}
+    </select>
+
+    <select id="findByIdLeaderDetail" parameterType="int" resultMap="LeaderDetailMap">
+        SELECT c.nombres, c.apellidos, c.edad, c.fec_nacimiento, c.direccion, c.sexo, c.estado_civil, l.rol, c.procedencia,
+               c.ocupacion, c.grado_profesional, l.lider_celular, l.lider_servidor, l.area_servicio, l.estado, l.grado,
+               mc.numero_celula, mc.nombre_lider, ms.nombre_supervision, ms.nombre_supervisor, msmz.nombre AS nombre_ministerio, msmz.nombre_col_past,
+               mz.nombre AS nombre_zona, mz.nombre_ps_zonal,
+               (SELECT COUNT(*)
+                FROM mae_celula
+                WHERE idlider = l.idcristiano) AS cantidad_celulas,
+               (SELECT ARRAY_AGG(comentario)
+                FROM mae_comentario
+                WHERE idcristiano = c.idcristiano) AS comentarios
+        FROM mae_lider l
+                 LEFT JOIN mae_cristiano c ON l.idcristiano = c.idcristiano
+                 LEFT JOIN mae_celula mc ON c.idcelula = mc.idcelula
+                 LEFT JOIN mae_supervision ms ON mc.idsupervision = ms.idsupervision
+                 LEFT JOIN mae_sector_minis_zonal msmz ON ms.idsector_ministerio = msmz.idsector_ministerio
+                 LEFT JOIN mae_zona mz ON msmz.idzona = mz.idzona
+        WHERE l.idlider = #{idLider}
+    </select>
+
+    <insert id="registerLeader" useGeneratedKeys="true" keyProperty="idLider">
+        INSERT INTO mae_lider (idCristiano, grado, lider_servidor, area_servicio, estado, lider_celular, rol)
+        VALUES (#{idCristiano}, #{grado}, #{liderServidor}, #{areaServicio}, #{estado}, #{liderCelular}, #{rol})
+    </insert>
+
+    <update id="updateLeader">
+        UPDATE mae_lider
+        SET idCristiano = #{idCristiano},
+            grado = #{grado},
+            lider_servidor = #{liderServidor},
+            area_servicio = #{areaServicio},
+            estado = #{estado},
+            lider_celular = #{liderCelular},
+            rol = #{rol}
+        WHERE idLider = #{idLider}
+    </update>
+
+    <delete id="deleteLeader"  parameterType="int">
+        DELETE FROM mae_lider WHERE idLider = #{idLider}
+    </delete>
+
+</mapper>
