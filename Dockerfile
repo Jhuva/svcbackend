@@ -1,4 +1,4 @@
-FROM amazoncorretto:21-alpine-jdk
+FROM amazoncorretto:17-alpine-jdk
 
 COPY target/svc-backend-0.0.1-SNAPSHOT.jar /api-v1.jar
 
